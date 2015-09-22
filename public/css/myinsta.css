@@ -1,0 +1,113 @@
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+.zf-green {
+    color: #68b604;
+}
+
+.btn-success {
+    background-color: #57a900;
+    background-image: -moz-linear-gradient(top, #70d900, #57a900);
+    background-image: -ms-linear-gradient(top, #70d900, #57a900);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#70d900), to(#57a900));
+    background-image: -webkit-linear-gradient(top, #70d900, #57a900);
+    background-image: -o-linear-gradient(top, #70d900, #57a900);
+    background-image: linear-gradient(top, #70d900, #57a900);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#70d900', endColorstr='#57a900', GradientType=0);
+}
+
+.btn-success:hover,
+.btn-success:active,
+.btn-success.active,
+.btn-success.disabled,
+.btn-success[disabled] {
+    background-color: #57a900;
+}
+
+.btn-success:active, .btn-success.active {
+    background-color: #57a900;
+}
+
+div.container a.brand {
+    background: url("../img/myinst.png") no-repeat scroll 0 10px transparent;
+    margin-left: 0;
+    padding: 8px 20px 12px 40px;
+}
+.index-img {
+    width: 31px;
+    height: 15px;
+}
+.nav-footer {
+    border: none;
+    text-align: center;
+}
+
+.index-notauth{
+    background-color: #edeff4;
+    text-align: center;
+    width: 1300px;
+}
+
+.index-notauth > div{
+    float: left;
+}
+
+.index-notauth img{
+    width: 300px;
+    height: 500px;
+}
+
+.nav-top {
+    background-color: #3a5795;
+}
+
+.nav-top a{
+    color: #fff;
+}
+
+.nav li a:hover {
+    background: grey;
+}
+
+.form-reg {
+    width: 400px;
+}
+.home-phone{
+    float: left;
+}
+
+.layout-form {
+    height: 30px;
+    width: 200px;
+    margin-top: 10px;
+}
+
+.form-inline button{
+    height: 30px;
+    margin-top: 10px;
+}
+
+.auth-icon {
+    width: 30px;
+    height: 30px;
+    background: #666666;
+    float: left;
+    margin-right: 10px;
+}
+
+.auth-icon > img {
+    width: 30px;
+    height: 30px;
+}
+
+.authUser {
+    margin-top: 10px;
+}
+
+.authUser button > a {
+    color: #000;
+}
+
+

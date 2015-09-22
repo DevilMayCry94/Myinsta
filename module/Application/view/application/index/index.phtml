@@ -1,0 +1,59 @@
+<div class="index-notauth">
+    <div class="col-xs-12 col-md-8">
+            <img src="<?php echo $this->basePath('img/home-phones.png')  ?>" alt="home-phone"/>
+    </div>
+    <div class="col-xs-6 col-md-4">
+                <h2>Create an account</h2>
+        <?php if ($this->error) :  ?>
+            <p class="error">
+                There were one or more issues with your submission.
+                Please correct them as indicated below.
+            </p>
+        <?php endif  ?>
+
+        <?php
+        $form = $this->form;
+        $form->prepare();
+        $form->setAttribute('method', 'post');
+        $form->setAttribute('class', 'form-horizontal');
+        $form->setAttribute('id', 'reg-form');
+        echo $this->form()->openTag($form);
+         ?>
+        <div class="form-group form-reg">
+                <?php
+                echo $this->formElement($form->get('name'));
+                echo $this->formElementErrors($form->get('name'));
+                 ?>
+        </div>
+        <div class="form-group form-reg">
+                <?php
+                echo $this->formElement($form->get('email'));
+                echo $this->formElementErrors($form->get('email'));
+                 ?>
+        </div>
+        <div class="form-group form-reg">
+                <?php
+                echo $this->formElement($form->get('password'));
+                echo $this->formElementErrors($form->get('password'));
+                 ?>
+        </div>
+        <div class="form-group form-reg">
+                <?php
+                echo $this->formElement($form->get('confirm_password'));
+                echo $this->formElementErrors($form->get('confirm_password'));
+                 ?>
+        </div>
+        <div class="form-group form-reg">
+            <?php
+            echo $this->formElement($form->get('submitreg'));
+            echo $this->formElementErrors($form->get('submitreg'));
+            ?>
+        </div>
+        <?php echo $this->form()->closeTag()  ?>
+        <h4>Sign in with:</h4><br>
+        <div class="auth-icon"><img src="<?php echo $this->basePath('img/facebook_icon.png')  ?>" alt="facebook"/></div>
+        <div class="auth-icon"><img src="<?php echo $this->basePath('img/googleplus-icon.png')  ?>" alt="gogleplus"/></div>
+        <div class="auth-icon"><img src="<?php echo $this->basePath('img/Twitter-icon.png')  ?>" alt="twitter"/></div>
+        <div class="auth-icon"><img src="<?php echo $this->basePath('img/vk-icon.jpg')  ?>" alt="vk"/></div>
+    </div>
+</div>
