@@ -13,9 +13,13 @@ class UserController extends AbstractActionController
 
     public function newAction()
     {
-        $inf = $this->getServiceLocator()->get('getAuthService')->getStorage();
-        $viewModel = new ViewModel(['inf' => $inf]);
-        return $viewModel;
+        if(isset($_SESSION['user'])) {
+            $inf = $this->getServiceLocator()->get('getAuthService')->getStorage();
+            $viewModel = new ViewModel(['inf' => $inf]);
+            return $viewModel;
+        } else {
+            $this->redirect()->toRoute('home');
+        }
     }
 
     public function confirmregAction()
@@ -26,6 +30,12 @@ class UserController extends AbstractActionController
     public function LoginAction()
     {
         return new ViewModel();
+    }
+
+    public  function LogoutAction()
+    {
+        session_destroy();
+        $this->redirect()->toRoute('home');
     }
 
 

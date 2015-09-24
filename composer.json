@@ -9,6 +9,9 @@
     "homepage": "http://framework.zend.com/",
     "require": {
         "php": ">=5.5",
-        "zendframework/zendframework": "~2.5"
+        "zendframework/zendframework": "~2.5",
+        "facebook/php-sdk-v4": "4.0.*",
+        "league/oauth2-facebook": "~1.0",
+        "league/oauth2-google": "^1.0"
     }
 }

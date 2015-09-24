@@ -108,7 +108,7 @@ return array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\User' => 'Application\Controller\UserController',
-            //'Application\Controller\Test' => 'Application\Controller\IndexController',
+            'Application\Controller\Social' => 'Application\Controller\SocialController',
         ),
     ),
     'view_manager' => array(

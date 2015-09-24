@@ -86,7 +86,7 @@ class Module
                     //$this->authservice = $authService;
                     return $authService;
 
-                }
+                },
             ),
             'invokables' => array(),
             'services' => array(),

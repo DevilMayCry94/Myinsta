@@ -92,7 +92,6 @@ div.container a.brand {
 .auth-icon {
     width: 30px;
     height: 30px;
-    background: #666666;
     float: left;
     margin-right: 10px;
 }
@@ -109,5 +108,34 @@ div.container a.brand {
 .authUser button > a {
     color: #000;
 }
+
+.profile {
+    text-align: center;
+}
+.profile > .inf td {
+    border: 1px solid black;
+    width: 450px;
+    height: 70px;
+}
+.ava {
+    width: 250px;
+}
+
+.profile .post {
+    margin-top: 20px;
+    border: 1px solid #428bca;
+    background-color: #D3D8E8;
+}
+
+.profile .post button {
+    float: right;
+}
+
+#InputFile {
+    float: left;
+}
+
+
+
 
 

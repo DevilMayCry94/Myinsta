@@ -44,7 +44,8 @@
         </div>
         <div class="collapse navbar-collapse pull-right">
             <?php
-            if (!isset($_SESSION["Zend_Auth"]["storage"]) || isset($_GET['exit'])) {
+            //if (!isset($_SESSION["Zend_Auth"]["storage"]) || isset($_GET['exit'])) {
+            if (!isset($_SESSION['user']) || isset($_GET['exit'])) {
                 session_destroy();
                 ?>
 
@@ -61,8 +62,9 @@
             <?php } else { ?>
                 <div class="authUser">
                     <a href="<?php echo $this->url('default', array('controller' => 'user', 'action' => 'index')) ?>">
-                        <?php echo "Hello " . $_SESSION["Zend_Auth"]["storage"]; ?></a>
-                    <button type="button" class="btn btn-default"><a href="?exit=1">Log out</a></button>
+                        <?= "Hello " . $_SESSION['user'];  ?></a>
+                    <button type="button" class="btn btn-default"><a href="<?= $this->url('default',
+                            array('controller'=>'user', 'action' => 'logout'));?>">Log out</a></button>
                 </div>
 
             <?php } ?>

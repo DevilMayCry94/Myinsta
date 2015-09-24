@@ -3,7 +3,12 @@
  * This makes our life easier when dealing with paths. Everything is relative
  * to the application root now.
  */
-
+define("URL_AUTH","https://www.Facebook.com/dialog/oauth");
+define("CLIENT_ID","1634789636775812");
+define("SECRET","35f300fc3a96dfa31ec8776fe7db5722");
+define("REDIRECT","http://test.com/social/facebook");
+define("TOKEN","https://graph.Facebook.com/oauth/access_token");
+define("GET_DATA","https://graph.Facebook.com/me");
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 chdir(dirname(__DIR__));
@@ -20,5 +25,6 @@ if (php_sapi_name() === 'cli-server') {
 // Setup autoloading
 require 'init_autoloader.php';
 session_start();
+//require_once '../lib/SocialAuther/autoload.php';
 // Run the application!
 Zend\Mvc\Application::init(require 'config/application.config.php')->run();

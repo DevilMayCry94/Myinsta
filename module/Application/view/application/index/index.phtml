@@ -51,9 +51,13 @@
         </div>
         <?php echo $this->form()->closeTag()  ?>
         <h4>Sign in with:</h4><br>
-        <div class="auth-icon"><img src="<?php echo $this->basePath('img/facebook_icon.png')  ?>" alt="facebook"/></div>
-        <div class="auth-icon"><img src="<?php echo $this->basePath('img/googleplus-icon.png')  ?>" alt="gogleplus"/></div>
-        <div class="auth-icon"><img src="<?php echo $this->basePath('img/Twitter-icon.png')  ?>" alt="twitter"/></div>
-        <div class="auth-icon"><img src="<?php echo $this->basePath('img/vk-icon.jpg')  ?>" alt="vk"/></div>
+        <a href="<?= $this->url('default', ['controller' => 'social', 'action'=> 'facebook']) ?>" class="auth-icon">
+            <img src="<?php echo $this->basePath('img/facebook_icon.png');  ?>" alt="facebook"/>
+        </a>
+        <a href="<?= $this->url('default', ['controller' => 'social', 'action' => 'google']);?>" class="auth-icon">
+            <img src="<?php echo $this->basePath('img/googleplus-icon.png')  ?>" alt="googleplus"/>
+        </a>
+        <a class="auth-icon"><img src="<?php echo $this->basePath('img/Twitter-icon.png')  ?>" alt="twitter"/></a>
+        <a class="auth-icon"><img src="<?php echo $this->basePath('img/vk-icon.jpg')  ?>" alt="vk"/></a>
     </div>
 </div>

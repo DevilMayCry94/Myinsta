@@ -12,8 +12,6 @@ namespace Application\Controller;
 
 use Application\Model\User;
 use Application\Model\UserTable;
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\TableGateway\TableGateway;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -21,6 +19,11 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
+        if(isset($_SESSION['user']))
+        {
+            $this->redirect()->toRoute(Null,['controller' => 'user', 'action'=> 'new']);
+        }
+
         if(!$this->request->isPost())
         {
             $form = $this->getServiceLocator()->get('RegisterForm');
@@ -35,8 +38,7 @@ class IndexController extends AbstractActionController
             $login = $this->getServiceLocator()->get('getAuthService')->authenticate();
             if($login->isValid())
             {
-                $this->getServiceLocator()->get('getAuthService')->getStorage()->write(
-                  $post->emailLogin);
+                $_SESSION['user'] = $post->emailLogin;
                 return $this->redirect()->toRoute(Null,array(
                     'controller' => 'user',
                     'action' => 'new',
@@ -69,16 +71,13 @@ class IndexController extends AbstractActionController
 
     public function createUser(array $data)
     {
-        $sm = $this->getServiceLocator();
-        $adapter = $sm->get('\Zend\Db\Adapter\Adapter');
-        $ResultSet = new ResultSet();
-        $ResultSet->getArrayObjectPrototype(new User);
-        $tableGateway = new TableGateway('user',$adapter,null,$ResultSet);
         $user = new User();
         $user->exchangeArray($data);
-        $userTable = new UserTable($tableGateway);
+        $userTable = new UserTable($this->getServiceLocator()->get('UserTableGateway'));
         $userTable->save($user);
         return true;
     }
+
+
 
 }
