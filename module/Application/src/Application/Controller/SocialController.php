@@ -21,9 +21,9 @@ class SocialController extends AbstractActionController
     public function googleAction()
     {
         $provider = new \League\OAuth2\Client\Provider\Google([
-            'clientId' => '564845408196-ps9621pb6purdqbk6vba8jh9h2csbaur.apps.googleusercontent.com',
-            'clientSecret'      => 'aC75BdPjsFCurnRZ8t34hw-u',
-            'redirectUri'  => 'http://test.com/social/google',
+            'clientId' => '181375994941-pr95p66ipum3o2o7kd7m036aovhb1m8s.apps.googleusercontent.com',
+            'clientSecret'      => 'Zjf-UJzb9ml8V4jqLJtbz4_S',
+            'redirectUri'  => 'http://dokuen-lx.nixsolutions.com/social/google',
         ]);
         $this->getData($provider);
     }

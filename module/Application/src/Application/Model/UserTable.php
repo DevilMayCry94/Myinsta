@@ -1,6 +1,10 @@
 <?php
 namespace Application\Model;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Mail;
+use Zend\Mail\Message;
+use Zend\Mail\Transport\Smtp;
+use Zend\Mail\Transport\SmtpOptions;
 
 class UserTable
 {
@@ -19,6 +23,7 @@ class UserTable
             'password' => $user->password,
             'ava' => $user->ava,
             'idSocial' => $user->idSocial,
+            'codeActivation' => md5($user->email.time()),
         );
         if($this->getidSocial($user->idSocial))
         {
@@ -56,6 +61,7 @@ class UserTable
         if (!$row) {
             return false;
         }
+        var_dump($row);exit;
         return $row;
     }
 
@@ -70,7 +76,64 @@ class UserTable
         return false;
     }
 
+    public function sendMail($email)
+    {
+        $activation = md5($email.time());
+        $textUrl = '<a target="_blank" href="http://dokuen-lx.nixsolutions.com/user/confirmreg?key=' . $activation . '">Активация</a>';
 
+        $body = "Hello! Please confirm your account!<br><br> click in this link " . $textUrl  ;
+
+        $message = new Message();
+        $message->setSubject('Confirm your account');
+        $message->addTo($email);
+        $message->addFrom('admin@kuendo-lx.nixsolutions.com');
+        $message->setBody($body);
+
+        $options = new SmtpOptions();
+        $options->setHost('10.10.0.114');
+        $options->setPort('2525');
+        $transport = new Smtp($options);
+
+        $headers = array(
+            'EXTERNAL' => 1,
+            'PROJECT' => 'Myinsta',
+            'EMAILS' => 'kuendo@nixsolutions.com'
+        );
+        foreach ($headers as $key => $value) {
+            $message->getHeaders()->addHeaderLine($key, $value);
+        }
+
+        $transport->send($message);
+    }
+
+    public function activation()
+    {
+        if(!empty($_GET['key']) && isset($_GET['key']))
+        {
+            $rowset = $this->tableGateway->select(array('codeActivation' => $_GET['key']));
+            $row = $rowset->current();
+            if($row)
+            {
+                $query = $this->tableGateway->select(array('codeActivation' => $_GET['key'], 'isActive' => 0));
+                $isNotActive = $query->current();
+                if($isNotActive)
+                {
+                    $this->tableGateway->update(['isActive' => 1], array('codeActivation' => $_GET['key']));
+                    $_SESSION['user'] = $isNotActive->name;
+                } else {
+                    header('Location: /user/forgetPassword');
+                }
+            }
+        }
+    }
+
+    public function getBy($get,$by)
+    {
+        $rowset = $this->tableGateway->select($by);
+        $row = $rowset->current();
+        return $row->$get;
+
+    }
 
 
 }

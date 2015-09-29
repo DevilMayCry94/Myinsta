@@ -4,11 +4,12 @@
  * to the application root now.
  */
 define("URL_AUTH","https://www.Facebook.com/dialog/oauth");
-define("CLIENT_ID","1634789636775812");
-define("SECRET","35f300fc3a96dfa31ec8776fe7db5722");
-define("REDIRECT","http://test.com/social/facebook");
+define("CLIENT_ID","1639489529651548");
+define("SECRET","60ef464920adbc20e90588249977ee85");
+define("REDIRECT","http://dokuen-lx.nixsolutions.com/social/facebook");
 define("TOKEN","https://graph.Facebook.com/oauth/access_token");
 define("GET_DATA","https://graph.Facebook.com/me");
+define("BASE_PATH",__DIR__);
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 chdir(dirname(__DIR__));

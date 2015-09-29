@@ -19,27 +19,25 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        if(isset($_SESSION['user']))
-        {
-            $this->redirect()->toRoute(Null,['controller' => 'user', 'action'=> 'new']);
+        if (isset($_SESSION['user'])) {
+            $this->redirect()->toRoute(Null, ['controller' => 'user', 'action' => 'new']);
         }
 
-        if(!$this->request->isPost())
-        {
+        if (!$this->request->isPost()) {
             $form = $this->getServiceLocator()->get('RegisterForm');
             $viewModel = new ViewModel(['form' => $form]);
             return $viewModel;
         }
 
         $post = $this->request->getPost();
-        if(isset($post->submitlog)) {
+        if (isset($post->submitlog)) {
             $this->getServiceLocator()->get('getAuthService')->getAdapter()->setIdentity(
                 $post->emailLogin)->setCredential($post->passLogin);
             $login = $this->getServiceLocator()->get('getAuthService')->authenticate();
-            if($login->isValid())
-            {
+            if ($login->isValid()) {
                 $_SESSION['user'] = $post->emailLogin;
-                return $this->redirect()->toRoute(Null,array(
+                $_SESSION['userEmail'] = $post->emailLogin;
+                return $this->redirect()->toRoute(Null, array(
                     'controller' => 'user',
                     'action' => 'new',
                 ));
@@ -53,8 +51,7 @@ class IndexController extends AbstractActionController
 
         $form = $this->getServiceLocator()->get('RegisterForm');
         $form->setData($post);
-        if(!$form->isValid())
-        {
+        if (!$form->isValid()) {
             $model = new ViewModel(array(
                 'error' => true,
                 'form' => $form,
@@ -62,10 +59,16 @@ class IndexController extends AbstractActionController
             $model->setTemplate('application/index/index');
             return $model;
         }
-        return ($this->createUser($form->getData()))? $this->redirect()->toRoute(Null,array(
-            'controller' => 'user',
-            'action' => 'confirmreg'
-        )) : false;
+        if ($this->createUser($form->getData())) {
+            $tableGateWay = $this->getServiceLocator()->get('UserTableGateway');
+            $mail = new UserTable($tableGateWay);
+            $mail->sendMail($post->email);
+            $this->redirect()->toRoute(Null, array(
+                'controller' => 'user',
+                'action' => 'confirmreg'
+            ));
+        }
+        return false;
 
     }
 
@@ -77,7 +80,6 @@ class IndexController extends AbstractActionController
         $userTable->save($user);
         return true;
     }
-
 
 
 }

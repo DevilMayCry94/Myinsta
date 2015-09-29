@@ -9,13 +9,13 @@ namespace Application\Form;
 
 use Zend\Form\Form;
 
-class Login extends Form
+class LoginForm extends Form
 {
     public function __construct()
     {
         parent::__construct("Login");
         $this->add(array(
-            'name' => 'Email',
+            'name' => 'email',
             'attributes' => array(
                 'type' => 'text',
                 'required' => 'required',
@@ -31,7 +31,7 @@ class Login extends Form
         ));
 
         $this->add(array(
-            'name' => 'Password',
+            'name' => 'password',
             'attributes' => array(
                 'type' => 'password',
                 'required' => 'required',
@@ -44,7 +44,7 @@ class Login extends Form
         ));
 
         $this->add(array(
-            "name" => "submit",
+            "name" => "submitlog",
             "attributes" => array(
                 "type" => "submit",
                 "value" => "Login",

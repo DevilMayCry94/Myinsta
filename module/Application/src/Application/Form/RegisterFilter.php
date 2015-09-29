@@ -39,6 +39,9 @@ class RegisterFilter extends  InputFilter
                         'table' => 'user',
                         'field' => 'email',
                         'adapter' => $adapter,
+                        "message" => array(\Zend\Validator\Db\AbstractDb::ERROR_NO_RECORD_FOUND =>
+                            "Email already exist!",
+                        ),
                     ),
                 )
             ),
@@ -58,6 +61,10 @@ class RegisterFilter extends  InputFilter
                     'options' => array(
                         'min' => 6,
                         'max' => 1000,
+                        "message" => array(\Zend\Validator\StringLength::TOO_SHORT =>
+                            "Password is too short",
+                            \Zend\Validator\StringLength::TOO_LONG => 'Password is too long',
+                        ),
                     ),
                 )
             )
@@ -76,6 +83,9 @@ class RegisterFilter extends  InputFilter
                     'name' => 'Identical',
                     'options' => array(
                         'token' => 'password',
+                        'message' => array(\Zend\Validator\Identical::MISSING_TOKEN =>
+                        'password do not match'
+                        ),
                     ),
                 )
             )

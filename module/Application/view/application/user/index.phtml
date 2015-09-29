@@ -1,8 +1,14 @@
+<?php
+$form = $this->form;
+$postTable = $this->postTable;
+$form->prepare(); // The correct enctype is set here
+?>
 <div class="col-md-6 col-md-offset-3 profile">
     <div class="inf">
         <table>
             <tr>
-                <td rowspan="3" class="ava"><img src="<?php echo $this->basePath('img/leo.jpg');?>" class="img-circle"/></td>
+                <td rowspan="3" class="ava"><img class="img-circle" style="width: 250px;height:250px;"
+                                                 src="<?php echo $this->basePath('img/leo.jpg'); ?>"/></td>
                 <td><a href="#"><h3><?php echo $_SESSION['user']; ?></h3></a></td>
             </tr>
             <tr>
@@ -19,25 +25,46 @@
                 </td>
             </tr>
             <tr>
-                <td></td>
+                <td>
+                    <button type="button" class="btn btn-default">Edit profile</button>
+                </td>
             </tr>
         </table>
     </div>
     <div class="post">
-        <form role="form">
-            <div class="form-group">
-                <textarea rows="3" cols="90" name="text" placeholder="What's new?"></textarea>
-                <button><span class="glyphicon glyphicon-camera"></span></button>
-            </div>
-            <div class="form-group">
-                <input type="file" id="InputFile">
-            </div>
-            <button type="submit" class="btn btn-primary">Send</button>
-        </form>
-    </div>s
+        <?php echo $this->form()->openTag($form); ?>
+        <div class="form-group">
+            <textarea rows="3" cols="90" name="post" placeholder="What's new?"></textarea>
+        </div>
+        <div class="form-element">
+            <?php $fileElement = $form->get('image-file'); ?>
+            <?php echo $this->formFile($fileElement); ?>
+            <?php echo $this->formElementErrors($fileElement); ?>
+            <button type="submit" class="btn btn-primary send-post">Send</button>
+        </div>
+
+        <?php echo $this->form()->closeTag(); ?>
+
+    </div>
     <div class="myphoto">
-        <img src="<?php echo $this->basePath('img/leo.jpg'); ?>"/>
-        <img src="<?php echo $this->basePath('img/leo.jpg'); ?>"/>
-        <img src="<?php echo $this->basePath('img/leo.jpg'); ?>"/>
+
+        <?php $posts = $this->posts;
+        foreach ($posts as $post) {
+            $url = explode('/', $post->urlImg);
+            ?>
+            <div class="profile-img">
+                <a ><img src="img/<?php echo $url[7]; ?>" id="img_<?= $post->id; ?>"/></a>
+                <div class="like-comment">
+                    <span class="glyphicon glyphicon-heart-empty"><?= $postTable->CountComment($post->id); ?></span>
+                </div>
+            </div>
+        <?php } ?>
+
     </div>
 </div>
+<div class="showImg">
+    <span class="glyphicon glyphicon-remove close">assssssssssssХ</span>
+    <div class="result"></div>
+</div>
+
+

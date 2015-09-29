@@ -9,7 +9,8 @@
 
 namespace Application;
 
-use Zend\Authentication\Adapter\DbTable\CallbackCheckAdapter;
+use Application\Model\Post;
+use Application\Model\PostTable;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Application\Model\User;
@@ -63,14 +64,31 @@ class Module
                     return new TableGateway('user', $dbAdapter, null,
                         $resultSetPrototype);
                 },
+                'PostTable' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new \Zend\Db\ResultSet\ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new \Application\Model\Post());
+                    $tableGateway = new \Zend\Db\TableGateway\TableGateway('post',$dbAdapter, null, $resultSetPrototype);
+                    return new PostTable($tableGateway);
+                },
                 'RegisterFilter' => function($sm) {
                     $adapter = $sm->get('\Zend\Db\Adapter\Adapter');
                     $inputFilter = new \Application\Form\RegisterFilter($adapter);
                     return $inputFilter;
                 },
+                'LoginFilter' => function($sm) {
+                    $adapter = $sm->get('\Zend\Db\Adapter\Adapter');
+                    $inputFilter = new \Application\Form\LoginFilter($adapter);
+                    return $inputFilter;
+                },
                 'RegisterForm' => function ($sm) {
                     $form = new \Application\Form\RegisterForm();
                     $form->setInputFilter($sm->get('RegisterFilter'));
+                    return $form;
+                },
+                'LoginForm' => function ($sm) {
+                    $form = new \Application\Form\LoginForm();
+                    $form->setInputFilter($sm->get('LoginFilter'));
                     return $form;
                 },
                 'getAuthService' => function($sm) {

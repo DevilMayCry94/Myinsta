@@ -1,61 +1,34 @@
-$(document).ready(function(){
-    jQuery.validator.setDefaults({
-        debug: true,
-        success: "valid"
+$(document).ready(function () {
+    $('.profile-img img').click(function () {
+        $('.showImg').fadeIn();
+        console.log(this.getAttribute('src'));
+        console.log(this.id);
+        $.ajax({
+            type: 'POST',
+            url: 'user/img',
+            data: 'id=' + this.id,
+            success: function(data){
+                $('.results').html(data);
+            }
+        });
+
+
+
     });
-    $('#reg-form').validate({
-        rules:{
-            Name:{
-                required: true,
-                minlength: 1,
-                maxlength: 100,
-            },
-            Email:{
-                required: true,
-                minlength: 5,
-                maxlength: 45,
-                email:true,
-            },
-            Password:{
-                required: true,
-                minlength: 6,
-                maxlength: 16,
-                regex: /^[0-9a-zA-Z\_]+$/
-            },
-            Confirm_password:{
-                required: true,
-                minlength: 6,
-                maxlength: 16,
-                equalTo:'#Password',
-                regex: /^[0-9a-zA-Z\_]+$/
-            },
-        },
-        messages:{
-            Name:{
-                required: "Введите имя пользователя",
-                minlength: "Минимальная длинна - 2 символа",
-                maxlength: "Максимальная длянна - 100 символов",
-                characters: "Имя может содержать только буквы",
-            },
-            Email:{
-                required: "Введите email!",
-                minlength: "Email должен быть минимум 5 символов",
-                maxlength: "Максимальное число символов - 45",
-                email:"Введите корректный email"
-            },
-            Password:{
-                required: "Введите пароль!",
-                minlength: "Пароль должен содержать минимум 6 символов",
-                maxlength: "Пароль должен содержать максимум 16 символов",
-                regex: "Пароль может содержать только латинские буквы, цифры и символы нижнего подчёркивания"
-            },
-            Confirm_password:{
-                required: "Повторите пароль",
-                minlength: "Пароль должен содержать минимум 6 символов",
-                maxlength: "Пароль должен содержать максимум 16 символов",
-                equalTo: "Пароли не совпадают",
-                regex: "Пароль может содержать только латинские буквы, цифры и символы нижнего подчёркивания"
-            },
+
+    $('.close').click(function () {
+        $('.showImg').fadeOut();
+    });
+
+    $.ajax({
+        type: 'POST',
+        url: 'user/search',
+        success: function(data) {
+            //$('.results').html(data);
+            console.log(data);
         }
     });
+
+
+
 });

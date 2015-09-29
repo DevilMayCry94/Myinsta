@@ -34,7 +34,13 @@ div.container a.brand {
     background: url("../img/myinst.png") no-repeat scroll 0 10px transparent;
     margin-left: 0;
     padding: 8px 20px 12px 40px;
+    z-index: 99;
 }
+
+.content {
+    text-align: center;
+}
+
 .index-img {
     width: 31px;
     height: 15px;
@@ -111,9 +117,10 @@ div.container a.brand {
 
 .profile {
     text-align: center;
+    width: 970px;
+    margin-left: 355px;
 }
 .profile > .inf td {
-    border: 1px solid black;
     width: 450px;
     height: 70px;
 }
@@ -125,6 +132,7 @@ div.container a.brand {
     margin-top: 20px;
     border: 1px solid #428bca;
     background-color: #D3D8E8;
+    padding: 20px;
 }
 
 .profile .post button {
@@ -134,6 +142,66 @@ div.container a.brand {
 #InputFile {
     float: left;
 }
+
+.login {
+    width: 500px;
+}
+
+.profile > .inf td .ava-profile {
+    width: 250px;
+    height: 250px;
+}
+
+.send-post {
+    margin-top: -30px;
+    margin-right: 10px;
+
+}
+
+.profile .myphoto {
+    margin-top: 30px;
+    border: 1px solid black;
+}
+
+.profile .myphoto img {
+    width: 300px;
+    height: 250px;
+    float: left;
+    margin: 5px;
+}
+
+.profile-img {
+    float: left;
+}
+.myphoto .like-comment {
+    z-index: 99;
+}
+.showImg {
+    z-index: 2000;
+    background-color: #000;
+    opacity: 0.7;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top:0;
+    display: none;
+}
+
+.search {
+    float: left;
+    width: 250px;
+    margin-top: 10px;
+}
+
+.search input {
+    height: 30px;
+    margin: auto;
+    width: 200px;
+    opacity: 0.9;
+
+}
+
 
 
 

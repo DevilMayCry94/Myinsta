@@ -1,1 +1,40 @@
-<h1>The Email or password is incorrect</h1>
+<div class="col-md-6 col-md-offset-3 login">
+<?php if ($this->error) :  ?>
+    <p class="error">
+        There were one or more issues with your submission.
+        Please correct them as indicated below.
+    </p>
+<?php endif  ?>
+
+<?php
+$form = $this->form;
+$form->prepare();
+$form->setAttribute('method', 'post');
+$form->setAttribute('class', 'form-horizontal');
+$form->setAttribute('id', 'reg-form');
+echo $this->form()->openTag($form);
+$log = $this->log;
+if(!$log)
+{ ?>
+    <h1>The Email or password is incorrect</h1>
+<?php }
+?>
+<div class="form-group">
+    <?php
+    echo $this->formElement($form->get('email'));
+    echo $this->formElementErrors($form->get('email'));
+    ?>
+</div>
+<div class="form-group ">
+    <?php
+    echo $this->formElement($form->get('password'));
+    echo $this->formElementErrors($form->get('password'));
+    ?>
+</div>
+<div class="form-group">
+    <?php
+    echo $this->formElement($form->get('submitlog'));
+    ?>
+</div>
+<?php echo $this->form()->closeTag()  ?>
+</div>
