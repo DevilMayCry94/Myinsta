@@ -46,14 +46,24 @@
         if (isset($_SESSION['user'])) {
         ?>
         <div class="search">
-            <form method="post" action="<?php $this->url('default',array('controller' => 'user', 'action' => 'search'));?>">
-                <input type="text" class="form-control" placeholder="Search..." name="search">
-            </form>
+
+            <div class="resultSearch">
+                <ul class="nav nav-pills">
+                    <li class="dropdown">
+                        <form method="post" action="<?php $this->url('default',array('controller' => 'user', 'action' => 'search'));?>"
+                              class=" navbar-search">
+                            <input type="text" class="form-control search-query" placeholder="Search..." name="search" id="search">
+                        </form>
+                        <ul class="dropdown-menu dropdown-list">
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
         </div>
         <?php } ?>
         <div class="collapse navbar-collapse pull-right">
             <?php
-            //if (!isset($_SESSION["Zend_Auth"]["storage"]) || isset($_GET['exit'])) {
             if (!isset($_SESSION['user']) || isset($_GET['exit'])) {
                 session_destroy();
                 ?>

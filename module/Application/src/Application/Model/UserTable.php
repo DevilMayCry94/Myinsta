@@ -1,5 +1,7 @@
 <?php
 namespace Application\Model;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Mail;
 use Zend\Mail\Message;
@@ -23,6 +25,7 @@ class UserTable
             'password' => $user->password,
             'ava' => $user->ava,
             'idSocial' => $user->idSocial,
+            'link' => $user->link,
             'codeActivation' => md5($user->email.time()),
         );
         if($this->getidSocial($user->idSocial))
@@ -42,15 +45,22 @@ class UserTable
         }
     }
 
-    public function getUser($id)
+    public function getUser($id,$all = false)
     {
-        $id = (int) $id;
+        $id = (int)$id;
         $rowset = $this->tableGateway->select(array('id' => $id));
         $row = $rowset->current();
         if (!$row) {
             throw new \Exception("Could not find row $id");
         }
+
         return $row;
+    }
+
+    public function fetchAll()
+    {
+        $rowset = $this->tableGateway->select();
+        return $rowset;
     }
 
     public function getidSocial($id)
@@ -127,13 +137,28 @@ class UserTable
         }
     }
 
-    public function getBy($get,$by)
+    public function getBy($get,array $by)
     {
         $rowset = $this->tableGateway->select($by);
         $row = $rowset->current();
-        return $row->$get;
-
+        if($row) {
+            return $row->$get;
+        } else {
+            throw new \Exception('User ID does not exist');
+        }
     }
 
+    /**
+     * @param $str
+     * @return \Zend\Db\ResultSet\ResultSet
+     */
+    public function searchPeople($str)
+    {
+        $rowset = $this->tableGateway->select(function (Select $select) use ($str) {
+            $select->where->like('name','%'.$str.'%');
+        }
+        );
+        return $rowset;
+    }
 
 }

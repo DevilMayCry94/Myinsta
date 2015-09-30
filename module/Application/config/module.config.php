@@ -56,6 +56,21 @@ return array(
                     ]
                 ),
             ),
+//            'default' => array(
+//                'type' => 'segment',
+//                'options' => array(
+//                    'route'    => '/[:user]',
+//                    'defaults' => array(
+//                        '__NAMESPACE__' => 'Application\Controller',
+//                        'controller'    => 'User',
+//                        'action'        => 'profile',
+//                    ),
+//                    'constraints' => [
+//                        'user'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                    ]
+//                ),
+//            ),
+
 
             'application' => array(
                 'type'    => 'Literal',
@@ -126,6 +141,9 @@ return array(
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',
+        ),
+        'strategies' => array(
+            'ViewJsonStrategy',
         ),
     ),
     // Placeholder for console routes

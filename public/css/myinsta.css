@@ -178,14 +178,15 @@ div.container a.brand {
 }
 .showImg {
     z-index: 2000;
-    background-color: #000;
-    opacity: 0.7;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    background-color: rgba(0,0,0,.8);
+    position:fixed !important;
+    position:absolute;
     top:0;
+    right:0;
+    bottom:0;
+    left:0;
     display: none;
+    text-align: center;
 }
 
 .search {
@@ -202,6 +203,52 @@ div.container a.brand {
 
 }
 
+.resultSearch {
+    /*display: none;*/
+}
+
+.dropdown-list {
+    left: auto;
+}
+
+#ImgWithComment {
+    padding: 20em 0;
+}
+
+.img-block {
+
+}
+
+
+.img-block img {
+    min-width: 350px;
+    min-height: 250px;
+    max-height: 600px;
+    max-width: 450px;
+
+}
+
+.img-block .inf-img {
+    width: 350px;
+    background-color: #fff;
+}
+
+.img-block .comment-img {
+    width: 350px;
+    background-color: #D3D8E8;
+}
+
+.img-block .my-comment {
+    width: 350px;
+    height: 35px;
+}
+
+.img-block .inp-comment {
+}
+
+.img-block button {
+    margin: auto;
+}
 
 
 

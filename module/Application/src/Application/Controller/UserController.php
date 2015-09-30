@@ -5,7 +5,7 @@ use Application\Form\UploadForm;
 use Application\Model\Post;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-
+use Zend\View\Model\JsonModel;
 class UserController extends AbstractActionController
 {
     public function indexAction()
@@ -97,11 +97,62 @@ class UserController extends AbstractActionController
 
     }
 
-    public function SearchAction()
+    public function ShowimgAction()
     {
-        return "1aaa";
+        $data = ['idImg' => $_POST['idImg'], 'src' => $_POST['src']];
+        $result = new JsonModel(array(
+            'response' => $data
+        ));
+        return $result;
     }
 
+    public function SearchAction()
+    {
+        $usertable = $this->getServiceLocator()->get('UserTable');
+        $obj = $usertable->searchPeople($_POST['search']);
+        foreach($obj as $o)
+        {
+            $data[] = array('id' => $o->id, 'name' => $o->name, 'ava' => $o->ava);
+        }
+        $result = new JsonModel($data);
+        return $result;
+    }
+
+    public function EditAction()
+    {
+        return new ViewModel();
+    }
+
+    public function ProfileAction()
+    {
+        $link = explode('/',$_SERVER['REQUEST_URI']);
+        $usertable = $this->getServiceLocator()->get('UserTable');
+        $id = $usertable->getBy('id',['link' => $link[1]]);
+        $inf = $usertable->getUser($id);
+        $postTable = $this->getServiceLocator()->get('PostTable');
+        $posts = $postTable->show($id);
+        $form = new UploadForm('upload-form');
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $post = array_merge_recursive(
+                $request->getPost()->toArray(),
+                $request->getFiles()->toArray()
+            );
+
+            $form->setData($post);
+            if ($form->isValid()) {
+                $dataForm = $form->getData();
+                $data = array(
+                    'urlImg'  => $dataForm['image-file']["tmp_name"],
+                    'comment' => $this->request->getPost()->post,
+                );
+                $this->savePost($data);
+
+                return $this->redirect()->toRoute(null, ['controller' =>'user','action' => 'index']);
+            }
+        }
+        return new ViewModel(['form' => $form, 'user' => $inf, 'posts' => $posts]);
+    }
 
 
 
