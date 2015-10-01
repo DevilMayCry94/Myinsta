@@ -3,12 +3,12 @@ $(document).ready(function () {
         $('.showImg').fadeIn();
         $.ajax({
             type: 'POST',
-            url: 'application/user/showimg',
+            url: '/user/showimg',
             data: 'idImg=' + this.id + '&src=' + this.getAttribute('src'),
             dataType: 'JSON',
             success: function(data) {
                 console.log(data['response'].src);
-                $(".ImgWithComment").text("");
+                $("#ImgWithComment").text("");
                 //???
                     var img = "<div class='img-block'>"
                         +'          <table>'
@@ -38,7 +38,7 @@ $(document).ready(function () {
                         +'          </table>'
                         +'     </div>';
                     //console.log(product);
-                    $(".ImgWithComment").append(img);
+                    $("#ImgWithComment").append(img);
             }
         });
 
@@ -57,11 +57,14 @@ $(document).ready(function () {
                 type: 'POST',
                 url: '/user/search',
                 data: 'search=' + searchval,
+                dataType: 'JSON',
                 success: function (data) {
-                    console.log(data);
+                    console.log(data[0]['ava']);
                     $('.dropdown-menu').empty();
                     for (var i in data) {
-                        var result = "<li><a tabindex='-1' href='" + data[i]['link'] + "'>"
+                        var result = "<li>"
+                            +"  <a tabindex='-1' href='?id=" + data[i]['id'] + " '>"
+                            + ' <img src="img/' + data[i]['ava'] +'" class="img-circle"/>    '
                             + '              ' + data[i]['name']
                             + '           </a></li>';
                         $('.dropdown-menu').append(result);

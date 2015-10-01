@@ -12,9 +12,14 @@ class UserController extends AbstractActionController
     {
         $form = new UploadForm('upload-form');
         $postTable = $this->getServiceLocator()->get('PostTable');
-        $iduser = $this->getServiceLocator()->get('UserTable');
-        $id = $iduser->getBy('id',['email' => $_SESSION['userEmail']]);
+        $userTable = $this->getServiceLocator()->get('UserTable');
+        if(!isset($_GET['id'])) {
+            $id = $userTable->getBy('id', ['email' => $_SESSION['userEmail']]);
+        } else {
+            $id = $_GET['id'];
+        }
         $posts = $postTable->show($id);
+        $user = $userTable->getUser($id);
         $request = $this->getRequest();
         if ($request->isPost()) {
             $post = array_merge_recursive(
@@ -35,7 +40,7 @@ class UserController extends AbstractActionController
             }
         }
 
-        return new ViewModel(['form' => $form, 'posts' => $posts, 'postTable' => $postTable]);
+        return new ViewModel(['form' => $form, 'posts' => $posts,'user' => $user]);
     }
 
     public function newAction()

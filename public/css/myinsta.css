@@ -203,12 +203,20 @@ div.container a.brand {
 
 }
 
-.resultSearch {
-    /*display: none;*/
+.result-search {
+
 }
 
 .dropdown-list {
     left: auto;
+    width: 199px;
+}
+
+.dropdown-list img {
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin-right: 15px;
 }
 
 #ImgWithComment {

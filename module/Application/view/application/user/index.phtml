@@ -1,15 +1,15 @@
 <?php
 $form = $this->form;
-$postTable = $this->postTable;
 $form->prepare(); // The correct enctype is set here
+$user = $this->user;
 ?>
 <div class="col-md-6 col-md-offset-3 profile">
     <div class="inf">
         <table>
             <tr>
                 <td rowspan="3" class="ava"><img class="img-circle" style="width: 250px;height:250px;"
-                                                 src="<?php echo $this->basePath('img/leo.jpg'); ?>"/></td>
-                <td><a href="#"><h3>Name</h3></a></td>
+                                                 src="img/<?= $user->ava; ?>"/></td>
+                <td><a href="#"><h3><?= $user->name;?></h3></a></td>
             </tr>
             <tr>
                 <td>
@@ -26,9 +26,15 @@ $form->prepare(); // The correct enctype is set here
             </tr>
             <tr>
                 <td>
+                    <?php if($_SESSION['userEmail'] == $user->email) { ?>
                     <a class="btn btn-success" href="/user/edit">
                         Edit profile
                     </a>
+                    <?php } else { ?>
+                        <a class="btn btn-success" href="/user/edit">
+                            Follow
+                        </a>
+                    <?php }?>
                 </td>
             </tr>
         </table>
@@ -57,7 +63,7 @@ $form->prepare(); // The correct enctype is set here
             <div class="profile-img">
                 <a ><img src="img/<?php echo $url[7]; ?>" id="img_<?= $post->id; ?>"/></a>
                 <div class="like-comment">
-                    <span class="glyphicon glyphicon-heart-empty"><?= $postTable->CountComment($post->id); ?></span>
+                    <span class="glyphicon glyphicon-heart-empty">1</span>
                 </div>
             </div>
         <?php } ?>
@@ -66,7 +72,7 @@ $form->prepare(); // The correct enctype is set here
 </div>
 <div class="showImg">
     <span class="glyphicon glyphicon-remove close">assssssssssssХ</span>
-    <div class="ImgWithComment" class="col-md-6 col-md-offset-3 row"></div>
+    <div id="ImgWithComment" class="col-md-6 col-md-offset-3 row"></div>
 </div>
 
 
