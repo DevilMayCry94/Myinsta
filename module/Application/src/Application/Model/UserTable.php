@@ -1,6 +1,7 @@
 <?php
 namespace Application\Model;
 use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Sql;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Mail;
 use Zend\Mail\Message;
@@ -159,6 +160,23 @@ class UserTable
         }
         );
         return $rowset;
+    }
+
+    public function news(Sql $sql)
+    {
+        $select = $sql->select();
+        $select->from(array('p' => 'post'))  // base table
+        ->join(array('u' => 'user'),     // join table with alias
+            'p.idUser = u.id')->join(array('f' => 'follow'),
+                'u.id = f.idFollower');
+        $select->where([ 'f.idUser' => $this->getBy('id',['email' => $_SESSION['userEmail']])]);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+        foreach($result as $r)
+        {
+            print_r($r);
+        }
+        die;
     }
 
 

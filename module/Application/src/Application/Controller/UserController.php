@@ -48,9 +48,11 @@ class UserController extends AbstractActionController
     public function newAction()
     {
         if(isset($_SESSION['user'])) {
-            $inf = $this->getServiceLocator()->get('getAuthService')->getStorage();
-            $viewModel = new ViewModel(['inf' => $inf]);
-            return $viewModel;
+            $userTable = $this->getServiceLocator()->get('UserTable');
+            $sql = $this->getServiceLocator()->get('Sql');
+            $userTable->news($sql);
+            //$viewModel = new ViewModel(['inf' => $inf]);
+            //return $viewModel;
         } else {
             $this->redirect()->toRoute('home');
         }
