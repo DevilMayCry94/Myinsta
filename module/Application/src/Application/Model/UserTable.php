@@ -1,7 +1,6 @@
 <?php
 namespace Application\Model;
 use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Where;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Mail;
 use Zend\Mail\Message;
@@ -130,6 +129,7 @@ class UserTable
                 {
                     $this->tableGateway->update(['isActive' => 1], array('codeActivation' => $_GET['key']));
                     $_SESSION['user'] = $isNotActive->name;
+                    $_SESSION['userEmail'] = $isNotActive->email;
                 } else {
                     header('Location: /user/forgetPassword');
                 }
@@ -160,5 +160,6 @@ class UserTable
         );
         return $rowset;
     }
+
 
 }

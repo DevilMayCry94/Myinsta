@@ -9,8 +9,9 @@
 
 namespace Application;
 
-use Application\Model\Post;
+use Application\Model\ActionTable;
 use Application\Model\PostTable;
+use Zend\Db\Sql\Sql;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Application\Model\User;
@@ -52,6 +53,11 @@ class Module
             'aliases' => array(),
             'factories' => array(
 // база данных
+                'Sql' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $sql  = new Sql($dbAdapter);
+                    return $sql;
+                },
                 'UserTable' => function ($sm) {
                     $tableGateway = $sm->get('UserTableGateway');
                     $table = new UserTable($tableGateway);
@@ -70,6 +76,13 @@ class Module
                     $resultSetPrototype->setArrayObjectPrototype(new \Application\Model\Post());
                     $tableGateway = new \Zend\Db\TableGateway\TableGateway('post',$dbAdapter, null, $resultSetPrototype);
                     return new PostTable($tableGateway);
+                },
+                'ActionTable' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new \Zend\Db\ResultSet\ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new \Application\Model\ActionUser());
+                    $tableGateway = new \Zend\Db\TableGateway\TableGateway('action',$dbAdapter, null, $resultSetPrototype);
+                    return new ActionTable($tableGateway);
                 },
                 'RegisterFilter' => function($sm) {
                     $adapter = $sm->get('\Zend\Db\Adapter\Adapter');

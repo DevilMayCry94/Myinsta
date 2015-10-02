@@ -10,6 +10,7 @@ class UserController extends AbstractActionController
 {
     public function indexAction()
     {
+        $isFollow = false;
         $form = new UploadForm('upload-form');
         $postTable = $this->getServiceLocator()->get('PostTable');
         $userTable = $this->getServiceLocator()->get('UserTable');
@@ -17,6 +18,7 @@ class UserController extends AbstractActionController
             $id = $userTable->getBy('id', ['email' => $_SESSION['userEmail']]);
         } else {
             $id = $_GET['id'];
+            $isFollow = $this->isFollowing($id);
         }
         $posts = $postTable->show($id);
         $user = $userTable->getUser($id);
@@ -40,7 +42,7 @@ class UserController extends AbstractActionController
             }
         }
 
-        return new ViewModel(['form' => $form, 'posts' => $posts,'user' => $user]);
+        return new ViewModel(['form' => $form, 'posts' => $posts,'user' => $user, 'isFollow' => $isFollow]);
     }
 
     public function newAction()
@@ -58,6 +60,32 @@ class UserController extends AbstractActionController
     {
         $confirm = $this->getServiceLocator()->get('UserTable');
         $confirm->activation();
+        $post = $this->getServiceLocator()->get('PostTable');
+        $usertable = $this->getServiceLocator()->get('UserTable');
+        $actionTable = $this->getServiceLocator()->get('ActionTable');
+        $idPost = 1;
+        $comment = $actionTable->getComment($idPost);
+        $inf_post = array(
+            'countLike'         => $actionTable->countLike($idPost),
+            'countComment'      => $actionTable->countComment($idPost),
+        );
+        $idUsersComment = $actionTable->getAllIdUserComment($idPost);
+        foreach($idUsersComment as $id)
+        {
+            $nameUsers[] = array(
+                "id"   => $id,
+                "name" => $usertable->getUser($id)->name);
+        }
+
+//        $data = array(
+//            'idImg'             => $_POST['idImg'],
+//            'src'               => $_POST['src'],
+//            'own_comment'       => $img->comment,
+//            'inf_user'          => $user,
+//            'inf_post'          => $inf_post,
+//            'comment'           => $comment
+//        );
+        print_r($comment);die;
         return new ViewModel();
     }
 
@@ -104,21 +132,30 @@ class UserController extends AbstractActionController
 
     public function ShowimgAction()
     {
-        $data = ['idImg' => $_POST['idImg'], 'src' => $_POST['src']];
-        $result = new JsonModel(array(
-            'response' => $data
-        ));
-        return $result;
-    }
-
-    public function SearchAction()
-    {
+        $post = $this->getServiceLocator()->get('PostTable');
         $usertable = $this->getServiceLocator()->get('UserTable');
-        $obj = $usertable->searchPeople($_POST['search']);
-        foreach($obj as $o)
+        $img = $post->getPostbysrc($_POST['src']);
+        $user = $usertable->getUser($img->idUser);
+        $actionTable = $this->getServiceLocator()->get('ActionTable');
+        $idPost = $img->id;
+        $comment = $actionTable->getComment($idPost);
+        $idUsersComment = $actionTable->getAllIdUserComment($idPost);
+        foreach($idUsersComment as $id)
         {
-            $data[] = array('id' => $o->id, 'name' => $o->name, 'ava' => $o->ava);
+            $nameUsers[] = $usertable->getUser($id)->name;
         }
+        $inf_post = array(
+            'countLike'         => $actionTable->countLike($idPost),
+            'countComment'      => $actionTable->countComment($idPost),
+        );
+        $data = array(
+            'idImg'             => $_POST['idImg'],
+            'src'               => $_POST['src'],
+            'own_comment'       => $img->comment,
+            'inf_user'          => $user,
+            'inf_post'          => $inf_post,
+            'comment'           => $comment
+            );
         $result = new JsonModel($data);
         return $result;
     }
@@ -128,35 +165,22 @@ class UserController extends AbstractActionController
         return new ViewModel();
     }
 
-    public function ProfileAction()
+    public function isFollowing($id)
     {
-        $link = explode('/',$_SERVER['REQUEST_URI']);
-        $usertable = $this->getServiceLocator()->get('UserTable');
-        $id = $usertable->getBy('id',['link' => $link[1]]);
-        $inf = $usertable->getUser($id);
-        $postTable = $this->getServiceLocator()->get('PostTable');
-        $posts = $postTable->show($id);
-        $form = new UploadForm('upload-form');
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $post = array_merge_recursive(
-                $request->getPost()->toArray(),
-                $request->getFiles()->toArray()
-            );
-
-            $form->setData($post);
-            if ($form->isValid()) {
-                $dataForm = $form->getData();
-                $data = array(
-                    'urlImg'  => $dataForm['image-file']["tmp_name"],
-                    'comment' => $this->request->getPost()->post,
-                );
-                $this->savePost($data);
-
-                return $this->redirect()->toRoute(null, ['controller' =>'user','action' => 'index']);
-            }
+        $sql = $this->getServiceLocator()->get('Sql');
+        $userTable = $this->getServiceLocator()->get('UserTable');
+        $user = $userTable->getBy('id',['email'=>$_SESSION['userEmail']]);
+        $select = $sql->select();
+        $select->from('follow');
+        $select->where(['idUser' => $user, 'idFollower' => $id]);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $row = $statement->execute()->current();
+        if($row)
+        {
+            return true;
+        } else {
+            return false;
         }
-        return new ViewModel(['form' => $form, 'user' => $inf, 'posts' => $posts]);
     }
 
 

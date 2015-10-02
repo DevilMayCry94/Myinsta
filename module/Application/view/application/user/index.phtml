@@ -2,6 +2,7 @@
 $form = $this->form;
 $form->prepare(); // The correct enctype is set here
 $user = $this->user;
+$isFollow = $this->isFollow;
 ?>
 <div class="col-md-6 col-md-offset-3 profile">
     <div class="inf">
@@ -9,7 +10,7 @@ $user = $this->user;
             <tr>
                 <td rowspan="3" class="ava"><img class="img-circle" style="width: 250px;height:250px;"
                                                  src="img/<?= $user->ava; ?>"/></td>
-                <td><a href="#"><h3><?= $user->name;?></h3></a></td>
+                <td><a href="#"><h3><?= $user->name; ?></h3></a></td>
             </tr>
             <tr>
                 <td>
@@ -26,34 +27,36 @@ $user = $this->user;
             </tr>
             <tr>
                 <td>
-                    <?php if($_SESSION['userEmail'] == $user->email) { ?>
-                    <a class="btn btn-success" href="/user/edit">
-                        Edit profile
-                    </a>
-                    <?php } else { ?>
+                    <?php if (isset($_SESSION['userEmail']) && $_SESSION['userEmail'] == $user->email) { ?>
                         <a class="btn btn-success" href="/user/edit">
-                            Follow
+                            Edit profile
                         </a>
-                    <?php }?>
+                    <?php } else { ?>
+                        <a class="btn btn-success follow" href="#" name="<?= $user->id ?>">
+                            <?= $isFollow ? "Following" : "Follow" ?>
+                        </a>
+                    <?php } ?>
                 </td>
             </tr>
         </table>
     </div>
-    <div class="post">
-        <?php echo $this->form()->openTag($form); ?>
-        <div class="form-group">
-            <textarea rows="3" cols="90" name="post" placeholder="What's new?"></textarea>
-        </div>
-        <div class="form-element">
-            <?php $fileElement = $form->get('image-file'); ?>
-            <?php echo $this->formFile($fileElement); ?>
-            <?php echo $this->formElementErrors($fileElement); ?>
-            <button type="submit" class="btn btn-primary send-post">Send</button>
-        </div>
+    <?php if (isset($_SESSION['userEmail']) && $_SESSION['userEmail'] == $user->email) { ?>
+        <div class="post">
+            <?php echo $this->form()->openTag($form); ?>
+            <div class="form-group">
+                <textarea rows="3" cols="90" name="post" placeholder="What's new?"></textarea>
+            </div>
+            <div class="form-element">
+                <?php $fileElement = $form->get('image-file'); ?>
+                <?php echo $this->formFile($fileElement); ?>
+                <?php echo $this->formElementErrors($fileElement); ?>
+                <button type="submit" class="btn btn-primary send-post">Send</button>
+            </div>
 
-        <?php echo $this->form()->closeTag(); ?>
+            <?php echo $this->form()->closeTag(); ?>
 
-    </div>
+        </div>
+    <?php } ?>
     <div class="myphoto">
 
         <?php $posts = $this->posts;
@@ -61,7 +64,8 @@ $user = $this->user;
             $url = explode('/', $post->urlImg);
             ?>
             <div class="profile-img">
-                <a ><img src="img/<?php echo $url[7]; ?>" id="img_<?= $post->id; ?>"/></a>
+                <a><img src="img/<?php echo $url[7]; ?>" id="img_<?= $post->id; ?>"/></a>
+
                 <div class="like-comment">
                     <span class="glyphicon glyphicon-heart-empty">1</span>
                 </div>
@@ -72,7 +76,25 @@ $user = $this->user;
 </div>
 <div class="showImg">
     <span class="glyphicon glyphicon-remove close">assssssssssssХ</span>
-    <div id="ImgWithComment" class="col-md-6 col-md-offset-3 row"></div>
-</div>
 
+    <div id="ImgWithComment" class="col-md-6 col-md-offset-3 row">
+        <article>
+            <section>
+                <header></header>
+                <div class="img-block"></div>
+                <div class="comment-img">'
+                    <ul id="comments"></ul>
+
+                    <section>
+
+                        <form method="post" action="" class="comment-form">
+                            <input id="comment-text" type="text" class="form-control" name="mycomment"
+                                   placeholder="Add a comment...">
+                        </form>
+                        <a id="btn-send-comment" class="btn btn-success">Send</a>
+                    </section>
+            </section>
+        </article>
+    </div>
+</div>
 

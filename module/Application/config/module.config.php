@@ -124,6 +124,7 @@ return array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
             'Application\Controller\User' => 'Application\Controller\UserController',
             'Application\Controller\Social' => 'Application\Controller\SocialController',
+            'Application\Controller\Ajax' => 'Application\Controller\AjaxController',
         ),
     ),
     'view_manager' => array(

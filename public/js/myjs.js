@@ -1,61 +1,96 @@
 $(document).ready(function () {
     $('.profile-img img').click(function () {
         $('.showImg').fadeIn();
-        $.ajax({
-            type: 'POST',
-            url: '/user/showimg',
-            data: 'idImg=' + this.id + '&src=' + this.getAttribute('src'),
-            dataType: 'JSON',
-            success: function(data) {
-                console.log(data['response'].src);
-                $("#ImgWithComment").text("");
-                //???
-                    var img = "<div class='img-block'>"
-                        +'          <table>'
-                        +'              <tr>'
-                        +'                  <td rowspan="3">'
-                        +                       '<img src="' + data['response'].src + '"/>'
-                        +'                  </td>'
-                        +'                  <td class="inf-img">'
-                        +'                       info'
-                        +'                  </td>'
-                        +'              </tr>'
-                        +'             <tr>'
-                        +'                  <td class="comment-img">'
-                        +'                       comment'
-                        +'                  </td>'
-                        +'              </tr>'
-                        +'             <tr>'
-                        +'                  <td class="my-comment">'
-                        +'                      <form action="user/comment" method="post" class="form-inline">'
-                        +'                      <div class="form-group inp-comment">'
-                        +'                          <input type="text" name="yourcomment" placeholder="Comment..." class="form-control"/>'
-                        +'                      </div>'
-                        +'                          <button type="submit" class="btn btn-default">Send</button>'
-                        +'                      </form>'
-                        +'                  </td>'
-                        +'              </tr>'
-                        +'          </table>'
-                        +'     </div>';
-                    //console.log(product);
-                    $("#ImgWithComment").append(img);
-            }
-        });
-
+        var src = this.getAttribute('src');
+        var id =this.id;
+        showComment(id,src);
+        sendComment(id,src);
+        function f() {loadComment(1)}
+        setInterval(f,1000);
 
     });
+
+    function showComment(id,src) {
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/index',
+            data: 'idImg=' + id + '&src=' + src ,
+            dataType: 'JSON',
+            success: function (data) {
+                console.log(JSON.stringify(data));
+                var comment = "";
+                for (var j in data["comment"]) {
+                    comment += "<li>"
+                        + '    <a href="?id=' + data["comment"][j]["idUser"]
+                        + '          ">' + data["comment"][j]["name"] + '</a> ' + data["comment"][j]["comment"] + ''
+                        + '  </li>';
+                }
+                ////???
+                var header = '<img src="img/' + data["inf_user"]["ava"] + '"/>'
+                    + '  <span> ' + data.inf_user.name + ' </span>';
+                var img = '<img src="' + data.src + '"/>';
+                var li = '<li><a href="?id=0">' + data["inf_user"]["name"] + '</a> ' + data["own_comment"] + '</li>'
+                    + comment;
+
+                $("#ImgWithComment header").append(header);
+                $('.img-block').append(img);
+                $('#comments').append(li);
+            }
+        });
+    }
+
+    function sendComment(id,src) {
+        $('#btn-send-comment').click(function(){
+            var comment = $('#comment-text').val();
+            if (comment != "") {
+                $.ajax({
+                    type: 'POST',
+                    url: '/ajax/myComment',
+                    data: 'idImg=' + id + '&src=' + src + '&textcomment=' + comment,
+                    dataType: 'JSON',
+                    success: function (data) {
+                        console.log(data);
+                        mycomment = "<li>"
+                            + '    <a href="#"' + data["idUser"]
+                            + '          ">' + data["name"] + '</a> ' + data["comment"] + ''
+                            + '  </li>';
+                        $("#comments").append(mycomment);
+                    }
+                });
+                $('#comment-text').val('');
+            }
+        });
+    }
+
+
+    function loadComment(id)
+    {
+        var count = 0;
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/loadComment',
+            data: 'idPost=' + id + '&count=' + count,
+            dataType: 'JSON',
+            success: function(data) {
+                console.log(data);
+            }
+        });
+        //console.log(id);
+    }
 
     $('.close').click(function () {
         $('.showImg').fadeOut();
+        $('#ImgWithComment header').empty();
+        $('.img-block').empty();
+        $('#comments').empty();
     });
     $("#search").keyup(function() {
-        //$('.resultSearch').fadeIn();
         var searchval = $('#search').val();
         if(searchval != "") {
             $('.dropdown-menu').fadeIn();
             $.ajax({
                 type: 'POST',
-                url: '/user/search',
+                url: '/ajax/search',
                 data: 'search=' + searchval,
                 dataType: 'JSON',
                 success: function (data) {
@@ -63,7 +98,7 @@ $(document).ready(function () {
                     $('.dropdown-menu').empty();
                     for (var i in data) {
                         var result = "<li>"
-                            +"  <a tabindex='-1' href='?id=" + data[i]['id'] + " '>"
+                            +"  <a tabindex='-1' href='/user?id=" + data[i]['id'] + " '>"
                             + ' <img src="img/' + data[i]['ava'] +'" class="img-circle"/>    '
                             + '              ' + data[i]['name']
                             + '           </a></li>';
@@ -77,7 +112,16 @@ $(document).ready(function () {
         }
     });
 
-
-
-
+    $('.follow').click(function(){
+        var idUser = this.getAttribute('name');
+        var btnValue = $.trim($('.follow').text());
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/follow',
+            data: 'idFollower=' + idUser + '&btnValue=' + btnValue,
+            success: function(data){
+                $('.follow').text(data['value']);
+            }
+        });
+    });
 });

@@ -14,7 +14,7 @@
 return array(
     'db' => array(
         'driver' => 'PDO',
-        'dsn' => 'mysql:dbname=test;host=localhost',
+        'dsn' => 'mysql:dbname=myinsta;host=localhost',
         'username' => 'root',
         'password' => '',
         'driver_options' => array(

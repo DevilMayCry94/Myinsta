@@ -8,6 +8,7 @@
 
 namespace Application\Model;
 
+use Zend\Db\Sql\Select;
 use Zend\Db\TableGateway\TableGateway;
 
 class PostTable
@@ -36,8 +37,12 @@ class PostTable
 
     }
 
-    public function CountComment($idImg)
+    public function getPostbysrc($src)
     {
-        return '1';
+        $rowset = $this->tableGateWay->select(function (Select $select) use ($src) {
+            $select->where->like('urlImg','%'.$src.'%');
+        });
+        return $rowset->current();
     }
+
 }
