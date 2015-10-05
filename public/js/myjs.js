@@ -124,4 +124,36 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#loadMore').click(function(){
+        var countPost = $('.myphoto img').length;
+        var userLink = $('#userLink')[0].getAttribute('name');
+        console.log(countPost);
+        console.log(userLink);
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/loadMore',
+            data: 'count=' + countPost + '&linkUser=' + userLink,
+            success: function(data){
+                console.log(data[0]['urlImg'].split('/'));
+                for(var d in data)
+                {
+                    if(d == data.length-1) break;
+                    var urlImg = data[d]['urlImg'].split('/')[7];
+                    var post = '<div class="profile-img">'
+                    + '<a ><img src="/img/' + urlImg + '" id="img_' + data[d]["id"] + '"/></a>'
+                    +'<div class="like-comment">'
+                    +'<span class="glyphicon glyphicon-heart-empty">1</span>'
+                    +'</div>'
+                    +'</div>';
+                    $('.myphoto').append(post);
+                }
+                if(data[data.length-1] == 1)
+                {
+                    $('#loadMore').remove();
+                }
+            }
+        });
+    });
+
 });

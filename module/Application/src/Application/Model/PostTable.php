@@ -32,7 +32,10 @@ class PostTable
 
     public function show($id)
     {
-        $rowset = $this->tableGateWay->select(['idUser' => $id]);
+        $rowset = $this->tableGateWay->select(function (Select $select) use ($id) {
+            $select->where->equalTo('idUser', $id);
+            $select->order('id DESC')->limit(9);
+        });
         return $rowset;
 
     }

@@ -1,2 +1,18 @@
 <h1>NEWS</h1>
-<div class="result"></div>
+<?php
+    $news = $this->news;
+    foreach($news as $n) {
+        $img_post = explode('/',$n['urlImg']);
+?>
+<div class="result ">
+    <article>
+        <header class="author-new">
+            <img src="/img/<?= $n['ava']; ?>" class="img-circle">
+            <span><?= $n['name']; ?></span>
+        </header>
+        <div class="new-post">
+            <img src="/img/<?= $img_post[7]; ?>"
+        </div>
+    </article>
+</div>
+<?php } ?>

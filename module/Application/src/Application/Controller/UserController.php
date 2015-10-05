@@ -50,9 +50,15 @@ class UserController extends AbstractActionController
         if(isset($_SESSION['user'])) {
             $userTable = $this->getServiceLocator()->get('UserTable');
             $sql = $this->getServiceLocator()->get('Sql');
-            $userTable->news($sql);
-            //$viewModel = new ViewModel(['inf' => $inf]);
-            //return $viewModel;
+            $news = $userTable->news($sql);
+            $action = $this->getServiceLocator()->get('ActionTable');
+            foreach($news as $n)
+            {
+                $n['countLike'] = $action->countLike($n['id']);
+                print_r($n);
+            }die;
+            $viewModel = new ViewModel(['news' => $news]);
+            return $viewModel;
         } else {
             $this->redirect()->toRoute('home');
         }
@@ -62,32 +68,6 @@ class UserController extends AbstractActionController
     {
         $confirm = $this->getServiceLocator()->get('UserTable');
         $confirm->activation();
-        $post = $this->getServiceLocator()->get('PostTable');
-        $usertable = $this->getServiceLocator()->get('UserTable');
-        $actionTable = $this->getServiceLocator()->get('ActionTable');
-        $idPost = 1;
-        $comment = $actionTable->getComment($idPost);
-        $inf_post = array(
-            'countLike'         => $actionTable->countLike($idPost),
-            'countComment'      => $actionTable->countComment($idPost),
-        );
-        $idUsersComment = $actionTable->getAllIdUserComment($idPost);
-        foreach($idUsersComment as $id)
-        {
-            $nameUsers[] = array(
-                "id"   => $id,
-                "name" => $usertable->getUser($id)->name);
-        }
-
-//        $data = array(
-//            'idImg'             => $_POST['idImg'],
-//            'src'               => $_POST['src'],
-//            'own_comment'       => $img->comment,
-//            'inf_user'          => $user,
-//            'inf_post'          => $inf_post,
-//            'comment'           => $comment
-//        );
-        print_r($comment);die;
         return new ViewModel();
     }
 

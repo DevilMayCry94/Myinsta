@@ -10,7 +10,7 @@ $isFollow = $this->isFollow;
             <tr>
                 <td rowspan="3" class="ava"><img class="img-circle" style="width: 250px;height:250px;"
                                                  src="img/<?= $user->ava; ?>"/></td>
-                <td><a href="#"><h3><?= $user->name; ?></h3></a></td>
+                <td><a id="userLink" href="#" name="<?= $user->link; ?>"><h3><?= $user->name; ?></h3></a></td>
             </tr>
             <tr>
                 <td>
@@ -64,7 +64,7 @@ $isFollow = $this->isFollow;
             $url = explode('/', $post->urlImg);
             ?>
             <div class="profile-img">
-                <a><img src="img/<?php echo $url[7]; ?>" id="img_<?= $post->id; ?>"/></a>
+                <a ><img src="img/<?php echo $url[7]; ?>" id="img_<?= $post->id; ?>"/></a>
 
                 <div class="like-comment">
                     <span class="glyphicon glyphicon-heart-empty">1</span>
@@ -72,7 +72,9 @@ $isFollow = $this->isFollow;
             </div>
         <?php } ?>
 
+
     </div>
+    <button type="button" class="btn btn-primary" id="loadMore">Load more</button>
 </div>
 <div class="showImg">
     <span class="glyphicon glyphicon-remove close">assssssssssssХ</span>

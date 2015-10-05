@@ -83,6 +83,34 @@ class AjaxController extends AbstractActionController
         }
     }
 
+    public function loadMoreAction()
+    {
+        $sql = $this->getServiceLocator()->get('Sql');
+        $userTable = $this->getServiceLocator()->get('UserTable');
+        $idUser = $userTable->getBy('id', ['link' => $_POST['linkUser']]);
+        $select = $sql->select();
+        $select->from('post');
+        $select->where(['idUser' => $idUser]);
+        $AllRecords = $sql->prepareStatementForSqlObject($select)->execute();
+        $select->order('id DESC');
+        $select->limit(9);
+        $select->offset((int)$_POST['count']);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $rows = $statement->execute();
+        foreach($rows as $r)
+        {
+            $data[] = $r;
+        }
+        if((int)$_POST['count'] + 9 >= $AllRecords->count())
+        {
+            $data[] = 1;
+        } else {
+            $data[] = 0;
+        }
+        return new JsonModel($data);
+    }
+
+
     public function saveComment()
     {
         $postTable = $this->getServiceLocator()->get('PostTable');

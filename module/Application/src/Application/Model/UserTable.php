@@ -166,17 +166,19 @@ class UserTable
     {
         $select = $sql->select();
         $select->from(array('p' => 'post'))  // base table
-        ->join(array('u' => 'user'),     // join table with alias
-            'p.idUser = u.id')->join(array('f' => 'follow'),
-                'u.id = f.idFollower');
+            ->join(array('u' => 'user'),    'p.idUser = u.id')
+            ->join(array('f' => 'follow'),  'u.id = f.idFollower');
         $select->where([ 'f.idUser' => $this->getBy('id',['email' => $_SESSION['userEmail']])]);
+        $select->order('p.id DESC');
+        $select->limit(12);
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
         foreach($result as $r)
         {
-            print_r($r);
+            $data[] = $r;
         }
-        die;
+
+        return $data;
     }
 
 
