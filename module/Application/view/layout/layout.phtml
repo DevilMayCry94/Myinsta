@@ -13,6 +13,7 @@
     <!-- Le styles -->
     <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
         ->prependStylesheet($this->basePath('css/myinsta.css'))
+        ->prependStylesheet($this->basePath('css/croppic.css'))
         ->prependStylesheet($this->basePath('css/bootstrap-theme.min.css'))
         ->prependStylesheet($this->basePath('css/bootstrap.min.css')) ?>
 
@@ -24,6 +25,8 @@
         ->prependFile($this->basePath('js/bootstrap.min.js'))
         ->prependFile($this->basePath('js/jquery.min.js'))
         ->prependFile($this->basePath('js/myjs.js'))
+        ->prependFile($this->basePath('js/croppic.js'))
+        ->prependFile($this->basePath('js/croppic.min.js'))
         ->prependFile($this->basePath('js/respond.min.js'), 'text/javascript', array('conditional' => 'lt IE 9',))
         ->prependFile($this->basePath('js/html5shiv.min.js'), 'text/javascript', array('conditional' => 'lt IE 9',)); ?>
 
@@ -64,8 +67,7 @@
         <?php } ?>
         <div class="collapse navbar-collapse pull-right">
             <?php
-            if (!isset($_SESSION['user']) || isset($_GET['exit'])) {
-                session_destroy();
+            if (!isset($_SESSION['user'])) {
                 ?>
 
                 <form class="form-inline" role="form" method="post">

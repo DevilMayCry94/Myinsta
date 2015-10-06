@@ -28,6 +28,39 @@ class SocialController extends AbstractActionController
         $this->getData($provider);
     }
 
+    public function twitterAction()
+    {
+        $server = new \League\OAuth1\Client\Server\Twitter(array(
+            'identifier' => '8WRCuOfk6P4c8UQVZXuvpi4RT',
+            'secret' => 'rKFQPjH8tVQtwlc1YFabOiN3SnlPoSOqvUA7YcLwhoVAJpc4L9',
+            'callback_uri' => 'http://dokuen-lx.nixsolutions.com/social/twitter',
+        ));
+        $temporaryCredentials = $server->getTemporaryCredentials();
+        $_SESSION['temporary_credentials'] = serialize($temporaryCredentials);
+        session_write_close();
+        $server->authorize($temporaryCredentials);
+        if (isset($_GET['oauth_token']) && isset($_GET['oauth_verifier'])) {
+            $temporaryCredentials = unserialize($_SESSION['temporary_credentials']);
+            $tokenCredentials = $server->getTokenCredentials($temporaryCredentials, $_GET['oauth_token'], $_GET['oauth_verifier']);
+        }
+        $user = $server->getUserDetails($tokenCredentials);
+        $uid = $server->getUserUid($tokenCredentials);
+        $email = $server->getUserEmail($tokenCredentials);
+        $screenName = $server->getUserScreenName($tokenCredentials);
+        $_SESSION['user'] = $user;
+        $_SESSION['userEmail'] = $email;
+        $data = array('idSocial' => $uid, 'name' => $screenName, 'email' => $email);
+        $user = new User();
+        $user->exchangeArray($data);
+        $userTable = new UserTable($this->getServiceLocator()->get('UserTableGateway'));
+        if($userTable->existEmailSocial($email)) {
+            $userTable->save($user);
+        }
+        $this->redirect()->toRoute(Null, ['controller' => 'user', 'action' => 'new']);
+
+
+    }
+
     public function getData($provider)
     {
         if (empty($_GET['code'])) {

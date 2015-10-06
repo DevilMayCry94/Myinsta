@@ -1,18 +1,41 @@
 <h1>NEWS</h1>
-<?php
-    $news = $this->news;
-    foreach($news as $n) {
-        $img_post = explode('/',$n['urlImg']);
-?>
-<div class="result ">
-    <article>
-        <header class="author-new">
-            <img src="/img/<?= $n['ava']; ?>" class="img-circle">
-            <span><?= $n['name']; ?></span>
-        </header>
-        <div class="new-post">
-            <img src="/img/<?= $img_post[7]; ?>"
-        </div>
-    </article>
+<div class="col-md-6 col-md-offset-3 news">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="?type=all-news">All</a>
+        </li>
+        <li><a href="?type=following-news" >Following</a></li>
+        <li><a href="?type=my-news">My news</a></li>
+    </ul>
+    <div>
+        <?php
+        $news = $this->news;
+        if ($news) {
+            foreach ($news as $n) {
+                $img_post = explode('/', $n['urlImg']);
+                ?>
+                <div class="result ">
+                    <article>
+                        <header class="author-new">
+                            <img src="/img/<?= $n['ava']; ?>" class="img-circle">
+                            <a href="/user?id=<?= $n['idUser'] ?>"><strong><?= $n['name']; ?></strong></a>
+                        </header>
+                        <div class="new-post">
+                            <img src="/img/<?= $img_post[7]; ?>">
+                            <span>like <?= $n['countLike']; ?> Comment <?= $n['countComment']; ?></span>
+                        </div>
+                        <form class="form-inline" role="form">
+                            <div class="form-group">
+                                <img src="<?php echo $this->basePath('img/like.png') ?>">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter your comment">
+                            </div>
+                            <button type="submit" class="btn btn-default">SEND</button>
+                        </form>
+                    </article>
+                </div>
+            <?php }
+        } ?>
+    </div>
 </div>
-<?php } ?>

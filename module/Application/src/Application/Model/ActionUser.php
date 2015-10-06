@@ -3,7 +3,7 @@ namespace Application\Model;
 
 class ActionUser
 {
-    public $id;
+    public $idAction;
     public $idPost;
     public $idUser;
     public $comment;
@@ -11,7 +11,7 @@ class ActionUser
 
     function exchangeArray($data)
     {
-        $this->id = (isset($data['id'])) ? $data['id'] : null;
+        $this->idAction = (isset($data['idAction'])) ? $data['idAction'] : null;
         $this->idPost = (isset($data['idPost'])) ? $data['idPost'] : null;
         $this->idUser = (isset($data['idUser'])) ? $data['idUser'] : null;
         $this->comment = (isset($data['comment'])) ? $data['comment'] : null;

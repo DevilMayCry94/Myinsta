@@ -41,7 +41,7 @@
 			
 			.cropControls{
 				z-index:2;
-				position:absolute;
+				/*position:absolute;*/
 				height:30px;
 				display:block;
 				/* top: -31px; */

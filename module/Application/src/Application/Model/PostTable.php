@@ -34,7 +34,7 @@ class PostTable
     {
         $rowset = $this->tableGateWay->select(function (Select $select) use ($id) {
             $select->where->equalTo('idUser', $id);
-            $select->order('id DESC')->limit(9);
+            $select->order('id_post DESC')->limit(9);
         });
         return $rowset;
 
@@ -46,6 +46,12 @@ class PostTable
             $select->where->like('urlImg','%'.$src.'%');
         });
         return $rowset->current();
+    }
+
+    public function getCountPost($idUser)
+    {
+        $rowset = $this->tableGateWay->select(['idUser'=>$idUser]);
+        return $rowset->count();
     }
 
 }

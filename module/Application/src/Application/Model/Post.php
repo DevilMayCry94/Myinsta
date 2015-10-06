@@ -10,14 +10,14 @@ namespace Application\Model;
 
 class Post
 {
-    public $id;
+    public $id_post;
     public $idUser;
     public $comment;
     public $urlImg;
 
     function exchangeArray($data)
     {
-        $this->id = isset($data['id']) ? $data['id'] : null;
+        $this->id_post = isset($data['id_post']) ? $data['id_post'] : null;
         $this->idUser = isset($data['idUser']) ? $data['idUser'] : null;
         $this->comment = isset($data['comment']) ? $data['comment'] : null;
         $this->urlImg = isset($data['urlImg']) ? $data['urlImg'] : null;

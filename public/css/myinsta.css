@@ -61,7 +61,7 @@ div.container a.brand {
 }
 
 .index-notauth img{
-    width: 300px;
+    width: 350px;
     height: 500px;
 }
 
@@ -163,7 +163,7 @@ div.container a.brand {
     border: 1px solid black;
 }
 
-.profile .myphoto img {
+.profile .myphoto  .profile-img a img {
     width: 300px;
     height: 250px;
     float: left;
@@ -176,19 +176,8 @@ div.container a.brand {
 .myphoto .like-comment {
     z-index: 99;
 }
-.showImg {
-    z-index: 2000;
-    background-color: rgba(0,0,0,.8);
-    position:fixed !important;
-    position:absolute;
-    top:0;
-    right:0;
-    bottom:0;
-    left:0;
-    display: none;
-    text-align: center;
-}
 
+/* search */
 .search {
     float: left;
     width: 250px;
@@ -217,6 +206,20 @@ div.container a.brand {
     height: 20px;
     float: left;
     margin-right: 15px;
+}
+
+/* modal window show post */
+.showImg {
+    z-index: 2000;
+    background-color: rgba(0,0,0,.8);
+    position:fixed !important;
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    display: none;
+    text-align: center;
 }
 
 #ImgWithComment {
@@ -267,17 +270,14 @@ div.container a.brand {
 .comment-img section > div {
     float: left;
 }
-/*.comment-img form {*/
-    /*bottom: 0;*/
-    /*position: absolute;*/
-/*}*/
+
 .comment-img ul {
     list-style: none;
     float: left;
+    padding-left: 0px;
 }
 
-
-.comment-img .comment-form{
+#ImgWithComment .comment-form{
     float: left;
     margin-left: 10px;
 }
@@ -310,54 +310,131 @@ div.container a.brand {
 .img-block button {
     margin: auto;
 }
+/***********************/
+.Comm {
+    height:auto;
+    display:block;
+    margin:0 0 30px 0;
+    position:relative;
+}
+.Comm > img {
+    width:30px;
+    height:30px;
+    border-radius: 25px;
+    background:#777;
+    float: left;
+}
+.Comm > span:nth-child(2) {
+    display:block;
+    font: normal normal 400 14px/18px "Segoe UI";
+    color:#477bea;
+    float: left;
+}
+.Comm > span:nth-child(3) {
+    display:block;
+    width:300px;
+    text-align:right;
+    font: normal normal 400 12px/18px "Segoe UI";
+    color:#999;
+    position:absolute;
+    margin-left:-35px;
+    float: right;
+    top:0;
+}
+.Comm > p {
+    font: normal normal 400 14px/22px "Segoe UI";
+    color:#333;
+    display:block;
+    width:230px;
+    text-align:left;
+    position:absolute;
+    float: right;
+    top:25px;
+    left: 35px;
+
+}
+
+#showMoreComment {
+    display:block;
+    width:250px;
+    height:25px;
+    font: normal normal 400 14px/18px "Segoe UI";
+    color:#fff;
+    padding-top:0px;
+    background:#f60;
+    border:1px solid #f60;
+    border-radius:2px;
+    outline:none;
+    float:right; margin-right:-2px;
+}
+#showMoreComment:hover {
+    background:#f50; border-color:#f50;
+    cursor:pointer;
+}
+
+#list-comment {
+    overflow-y: scroll;
+    height: 285px;
+    overflow-x: hidden;
+}
+
+/* News */
+
 .news {
     text-align: center;
+    width: 650px;
 }
 
 .result {
-    margin: 10px;
     border: 1px solid gainsboro;
-    width: 610px;
+    margin: 5px;
 }
+
 .result .author-new {
     margin-bottom: 10px ;
     height: 30px;
     padding: 10px;
 }
+
 .result .author-new img {
-    height: 30px;
+    height: 50px;
     margin: -1px 10px -1px -5px;
-    width: 30px;
+    width: 50px;
     float: left;
 }
 
-.result .author-new span {
+.result .author-new a {
     float: left;
 }
 
-.result article {
-    /*background-color: #fff;*/
-    /*border: 1px solid #edeeee;*/
-    /*border-radius: 3px;*/
-    /*margin-bottom: 60px;*/
-    /*margin-left: -1px;*/
-    /*margin-right: -1px;*/
-}
-
-/*.result header div {*/
-    /*display: block;*/
-    /*-webkit-box-flex: 1;*/
-    /*-webkit-flex-grow: 1;*/
-    /*flex-grow: 1;*/
-    /*-webkit-flex-shrink: 1;*/
-    /*flex-shrink: 1;*/
-    /*overflow: hidden;*/
-    /*line-height: 0;*/
-/*}*/
 
 .result .new-post img{
     width: 600px;
     height: 600px;
+}
+
+.like-comment{
+    position: absolute;
+    background-color: rgba(0,0,0,.7);
+    width: 300px;
+    height: 50px;
+    margin: 205px 5px 5px 5px;
+    display: none;
+    text-align: center;
+    padding-top: 7px;
+}
+
+.like-comment img{
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+#cropContainerHeader {
+    width: 400px;
+    height: 400px;
+    position:relative;
+    border: 1px solid black;
 }
 
 

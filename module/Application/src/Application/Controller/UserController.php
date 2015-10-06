@@ -22,6 +22,9 @@ class UserController extends AbstractActionController
         }
         $posts = $postTable->show($id);
         $user = $userTable->getUser($id);
+        $inf['postCount'] = $postTable->getCountPost($id);
+        $inf['followersCount'] = $this->countFollower($id);
+        $inf['followingCount'] = $this->countFollowing($id);
         $request = $this->getRequest();
         if ($request->isPost()) {
             $post = array_merge_recursive(
@@ -41,24 +44,31 @@ class UserController extends AbstractActionController
                 return $this->redirect()->toRoute(null, ['controller' =>'user','action' => 'index']);
             }
         }
+        //print_r($user);die;
 
-        return new ViewModel(['form' => $form, 'posts' => $posts,'user' => $user, 'isFollow' => $isFollow]);
+        return new ViewModel(['form' => $form, 'posts' => $posts,'user' => $user, 'isFollow' => $isFollow, 'inf' => $inf]);
     }
 
     public function newAction()
     {
         if(isset($_SESSION['user'])) {
+            $type = (isset($_GET['type'])) ? $_GET['type'] : 'all-news';
             $userTable = $this->getServiceLocator()->get('UserTable');
             $sql = $this->getServiceLocator()->get('Sql');
-            $news = $userTable->news($sql);
+            $news = $userTable->news($sql, $type);
             $action = $this->getServiceLocator()->get('ActionTable');
-            foreach($news as $n)
-            {
-                $n['countLike'] = $action->countLike($n['id']);
-                print_r($n);
-            }die;
-            $viewModel = new ViewModel(['news' => $news]);
-            return $viewModel;
+            if($news) {
+                foreach ($news as $n) {
+                    $n['countLike'] = $action->countLike($n['id_post']);
+                    $n['countComment'] = $action->countComment($n['id_post']);
+                    $data[] = $n;
+                }
+
+                $viewModel = new ViewModel(['news' => $data]);
+                return $viewModel;
+            } else {
+                return new ViewModel();
+            }
         } else {
             $this->redirect()->toRoute('home');
         }
@@ -163,6 +173,28 @@ class UserController extends AbstractActionController
         } else {
             return false;
         }
+    }
+
+    public function countFollower($idUser)
+    {
+        $sql = $this->getServiceLocator()->get('Sql');
+        $select = $sql->select();
+        $select->from('follow');
+        $select->where(['idFollower'=>$idUser]);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $row = $statement->execute();
+        return $row->count();
+    }
+
+    public function countFollowing($idUser)
+    {
+        $sql = $this->getServiceLocator()->get('Sql');
+        $select = $sql->select();
+        $select->from('follow');
+        $select->where(['idUser'=>$idUser]);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $row = $statement->execute();
+        return $row->count();
     }
 
 
