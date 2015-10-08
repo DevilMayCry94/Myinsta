@@ -41,12 +41,12 @@
 			
 			.cropControls{
 				z-index:2;
-				/*position:absolute;*/
+				position:absolute;
 				height:30px;
 				display:block;
 				/* top: -31px; */
-				top: -1px;
-				right: -1px;
+				top: 0px;
+				right: 60px;
 				font-family:sans-serif;
 				background-color:rgba(0,0,0,0.35); 
 			}
@@ -65,7 +65,8 @@
 				font-size:13px;
 				font-weight: bold;
 				font-style: normal;
-				
+				/*position: absolute;
+				top: -25px;*/
 			}
 			
 			.cropControls i:hover{ background-color:rgba(0,0,0,0.7);  }

@@ -12,7 +12,6 @@
         $news = $this->news;
         if ($news) {
             foreach ($news as $n) {
-                $img_post = explode('/', $n['urlImg']);
                 ?>
                 <div class="result ">
                     <article>
@@ -20,13 +19,16 @@
                             <img src="/img/<?= $n['ava']; ?>" class="img-circle">
                             <a href="/user?id=<?= $n['idUser'] ?>"><strong><?= $n['name']; ?></strong></a>
                         </header>
-                        <div class="new-post">
-                            <img src="/img/<?= $img_post[7]; ?>">
-                            <span>like <?= $n['countLike']; ?> Comment <?= $n['countComment']; ?></span>
+                        <div class="new-post" data-post="<?= $n['id_post'];?>">
+                            <img src="<?= $n['urlImg']; ?>">
+                            <p>like <span><?= $n['countLike'] . " "; ?></span>Comment <span><?= $n['countComment']; ?></span></p>
                         </div>
                         <form class="form-inline" role="form">
-                            <div class="form-group">
-                                <img src="<?php echo $this->basePath('img/like.png') ?>">
+                            <div class="like-icon">
+                                <a class="btn-default">
+                                    <img class="<?= ($n['isLike']) ? 'like' : ''; ?>"
+                                         src="<?= ($n['isLike']) ? $this->basePath('/img/like.png') : $this->basePath('/img/unlike.png'); ?>">
+                                </a>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Enter your comment">

@@ -247,6 +247,10 @@ div.container a.brand {
     width: 40px;
 }
 
+#ImgWithComment header > img {
+    float: right;
+}
+
 .img-block {
     float: left;
     background-color: gainsboro;
@@ -385,9 +389,19 @@ div.container a.brand {
     width: 650px;
 }
 
+.like-icon img {
+    width: 40px;
+    height: 40px;
+    float: left;
+}
+
 .result {
     border: 1px solid gainsboro;
     margin: 5px;
+}
+
+.result input  {
+    width: 450px;
 }
 
 .result .author-new {
@@ -424,17 +438,25 @@ div.container a.brand {
     padding-top: 7px;
 }
 
-.like-comment img{
+.like-comment > img{
     position: relative;
     width: 40px;
     height: 40px;
 }
 
+.like-comment > span{
+    color: #fff;
+}
+
 #cropContainerHeader {
-    width: 400px;
-    height: 400px;
+    width: 50px;
+    height: 50px;
     position:relative;
+    margin-left:80px;
     border: 1px solid black;
 }
 
-
+#cropContainerHeader > img {
+    width: 50px;
+    height: 50px;
+}

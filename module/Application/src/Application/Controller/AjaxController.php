@@ -2,6 +2,7 @@
 namespace Application\Controller;
 
 use Application\Model\ActionUser;
+use Application\Model\Post;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 
@@ -148,7 +149,6 @@ class AjaxController extends AbstractActionController
         $actionTable = $this->getServiceLocator()->get('ActionTable');
         $idPost = $img->id_post;
         if($actionTable->getAction($idPost)) {
-
             $sql = $this->getServiceLocator()->get('Sql');
             $select = $sql->select();
             $select->from(array('a' => 'action'))// base table
@@ -158,15 +158,14 @@ class AjaxController extends AbstractActionController
                 new \Zend\Db\Sql\Predicate\IsNotNull('a.comment')]);
             $statement = $sql->prepareStatementForSqlObject($select);
             $rows = $statement->execute();
-            foreach ($rows as $r) {
-                $comment[] = $r;
+            if($rows->count()) {
+                foreach ($rows as $r) {
+                    $comment[] = $r;
+                }
+                $data['comment'] = $comment;
             }
-            $inf_post = array(
-                'countLike' => $actionTable->countLike($idPost),
-                'countComment' => $actionTable->countComment($idPost),
-            );
-            $data['inf_post'] = $inf_post;
-            $data['comment'] = $comment;
+            $data['countLike'] = $actionTable->countLike($idPost);
+            $data['countComment'] = $actionTable->countComment($idPost);
         }
         return $data;
     }
@@ -177,7 +176,7 @@ class AjaxController extends AbstractActionController
 
     public function cropfileAction()
     {
-        $imgUrl = $_POST['imgUrl'];
+        $imgUrl = BASE_PATH . $_POST['imgUrl'];
 // original sizes
         $imgInitW = $_POST['imgInitW'];
         $imgInitH = $_POST['imgInitH'];
@@ -195,28 +194,28 @@ class AjaxController extends AbstractActionController
 
         $jpeg_quality = 100;
 
-        $output_filename = "temp/croppedImg_".rand();
+        $filename = "croppedImg_".rand();
+        $output_filename = BASE_PATH . "/img/" . $filename;
 
 // uncomment line below to save the cropped image in the same location as the original image.
 //$output_filename = dirname($imgUrl). "/croppedImg_".rand();
-
         $what = getimagesize($imgUrl);
 
         switch(strtolower($what['mime']))
         {
             case 'image/png':
-                $img_r = imagecreatefrompng($imgUrl);
+                //$img_r = imagecreatefrompng($imgUrl);
                 $source_image = imagecreatefrompng($imgUrl);
                 $type = '.png';
                 break;
             case 'image/jpeg':
-                $img_r = imagecreatefromjpeg($imgUrl);
+                //$img_r = imagecreatefromjpeg($imgUrl);
                 $source_image = imagecreatefromjpeg($imgUrl);
                 error_log("jpg");
                 $type = '.jpeg';
                 break;
             case 'image/gif':
-                $img_r = imagecreatefromgif($imgUrl);
+                //$img_r = imagecreatefromgif($imgUrl);
                 $source_image = imagecreatefromgif($imgUrl);
                 $type = '.gif';
                 break;
@@ -257,15 +256,16 @@ class AjaxController extends AbstractActionController
             imagejpeg($final_image, $output_filename.$type, $jpeg_quality);
             $response = Array(
                 "status" => 'success',
-                "url" => $output_filename.$type
+                "url" => '/img/'.$filename.$type
             );
         }
         print json_encode($response);
+        die;
     }
 
     public function imgsaveAction()
     {
-        $imagePath = "temp/";
+        $imagePath = BASE_PATH . "/temp/";
 
         $allowedExts = array("gif", "jpeg", "jpg", "png", "GIF", "JPEG", "JPG", "PNG");
         $temp = explode(".", $_FILES["img"]["name"]);
@@ -301,10 +301,11 @@ class AjaxController extends AbstractActionController
 
                 $response = array(
                     "status" => 'success',
-                    "url" => $imagePath.$_FILES["img"]["name"],
+                    "url" => '/temp/'.$_FILES["img"]["name"],
                     "width" => $width,
                     "height" => $height
                 );
+
 
             }
         }
@@ -315,8 +316,75 @@ class AjaxController extends AbstractActionController
                 "message" => 'something went wrong, most likely file is to large for upload. check upload_max_filesize, post_max_size and memory_limit in you php.ini',
             );
         }
-
         print json_encode($response);
+        die;
+    }
+
+    public function addpostAction()
+    {
+        $post = array(
+            'urlImg'  => $_POST['src_img'],
+            'comment' => $_POST['comment'],
+        );
+        $this->savePost($post);
+        return new JsonModel(['status'=>'success']);
+    }
+
+    public function savePost($data)
+    {
+        $iduser = $this->getServiceLocator()->get('UserTable');
+        $data['idUser'] = $iduser->getBy('id',['email' => $_SESSION['userEmail']]);
+        $post = new Post();
+        $post->exchangeArray($data);
+        $userTable = $this->getServiceLocator()->get('PostTable');
+        $userTable->save($post);
+        return true;
+
+    }
+
+    public function changeAvaAction()
+    {
+        $iduser = $this->getServiceLocator()->get('UserTable')->getBy('id',['email' => $_SESSION['userEmail']]);
+        $sql = $this->getServiceLocator()->get('Sql');
+        $update = $sql->update();
+        $update->table('user');
+        $img = explode('/',$_POST['src_ava']);
+        $update->set(['ava' => $img[2]]);
+        $update->where->equalTo('id', $iduser);
+        $statement = $sql->prepareStatementForSqlObject($update);
+        $statement->execute();
+        return new JsonModel(['status' => 'success']);
+    }
+
+    public function newsLikeAction()
+    {
+        $actionTable = $this->getServiceLocator()->get('ActionTable');
+        $userTable = $this->getServiceLocator()->get('UserTable');
+        $where = array("idPost" => $_POST['idPost'],
+            'idUser' => $userTable->getBy('id', ['email' => $_SESSION['userEmail']]));
+        $action = new ActionUser();
+        if($_POST['isLike'] == 'false') {
+            $data = array(
+                'idPost' => $_POST['idPost'],
+                'idUser' => $userTable->getBy('id', ['email' => $_SESSION['userEmail']]),
+                'like' => 1
+            );
+        } else {
+            $data = array(
+                'idPost' => $_POST['idPost'],
+                'idUser' => $userTable->getBy('id', ['email' => $_SESSION['userEmail']]),
+                'like' => 0
+            );
+        }
+        if($actionTable->actionUser($where)){
+            $actionTable->update($data,$where);
+        }else {
+            $action = new ActionUser();
+            $action->exchangeArray($data);
+            $actionTable->save($action);
+        }
+
+        return new JsonModel(['status' => 'success']);
     }
 
 

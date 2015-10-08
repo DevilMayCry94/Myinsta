@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('.myphoto').on('click', 'img', function () {
+    $('.profile-post').on('click', function () {
         $('.showImg').fadeIn();
         src = "";
         src = this.getAttribute('src');
@@ -9,17 +9,18 @@ $(document).ready(function () {
             loadComment(src)
         }
 
-        commentLoad = setInterval(f, 1500);
+        commentLoad = setInterval(f, 1000);
 
     });
 
     function showComment(id, src) {
+        console.log(id + " -> "+ src);
         $.ajax({
             type: 'POST',
             url: '/ajax/index',
             data: 'idImg=' + id + '&src=' + src,
-            dataType: 'JSON',
             success: function (data) {
+                console.log(data);
                 var comment = "";
                 for (var j in data["comment"]) {
                     comment += '<li class="Comm" data-reactid="' + data["comment"][j]['idAction'] + '">'
@@ -34,7 +35,7 @@ $(document).ready(function () {
                 ////???
                 var header = '<img src="img/' + data["inf_user"]["ava"] + '"/>'
                     + '  <span> ' + data["inf_user"]["name"] + ' </span>';
-                var img = '<img src="' + data.src + '"/>';
+                var img = '<img src="' + data["src"] + '"/>';
                 var li = '<li><a href="?id=0">' + data["inf_user"]["name"] + '</a> ' + data["own_comment"] + '</li>'
                     + comment;
 
@@ -67,23 +68,10 @@ $(document).ready(function () {
                 type: 'POST',
                 url: '/ajax/myComment',
                 data: 'idImg=' + id + '&src=' + src + '&textcomment=' + comment,
-                dataType: 'JSON',
-                success: function (data) {
-                    var mycomment = '<li class="Comm"  data-reactid="' + lastid + '"> '
-                        + '<img data-after="' + data["ava"] + '" />'
-                        + '<a href="#">' + data["name"] + '</a>'
-                        + '<span>' + datetime + '</span>'
-                        + '<p>' + data["comment"] + '</p>'
-                        + '</li>'
-                    $("#comments").append(mycomment);
-                }
+                dataType: 'JSON'
             });
             $('#comment-text').val('');
         }
-    });
-
-    $('#btn-send-comment').click(function () {
-
     });
 
 
@@ -111,7 +99,7 @@ $(document).ready(function () {
 
     $('.close').click(function () {
         $('.showImg').fadeOut();
-        $('#ImgWithComment header').empty();
+        $('#ImgWithComment header').find('*').not('button').remove();
         $('.img-block').empty();
         $('#comments').empty();
         clearInterval(commentLoad);
@@ -186,6 +174,11 @@ $(document).ready(function () {
         });
     });
 
+    $('.like-comment .profile-like').on('click',function(){
+        var self = this;
+        like(self);
+    });
+
     $('.profile-img').mouseover(function () {
         $(this).find('.like-comment').css('display', 'block');
         //var target = $( e.target );
@@ -206,12 +199,37 @@ $(document).ready(function () {
         console.log("a");
     });
 
+    $('.like-icon img').on('click', function(){
+        var self = this;
+        like(self);
+    });
+
+    function like(self) {
+        var isLike = $(self).hasClass('like') ? 'true' : 'false';
+        var idPost = $(self).parent().parent().parent().parent().find('.new-post').data('post');
+        if(isLike == 'true') {
+            $(self).removeClass('like');
+            $(self).attr('src','/img/unlike.png');
+        } else {
+            $(self).addClass('like');
+            $(self).attr('src','/img/like.png');
+        }
+        $.ajax({
+            method: 'POST',
+            url: '/ajax/newsLike',
+            data: 'isLike=' + isLike + '&idPost=' + idPost,
+            success: function(data) {
+            }
+        });
+    }
+
+    //croppic img
+
     var croppicContainerModalOptions = {
-        uploadUrl: '/ajax/imgsave',
-        cropUrl: '/ajax/cropfile',
-        modal:false,
-        doubleZoomControls:false,
-        rotateControls: false,
+        uploadUrl:'/ajax/imgsave',
+        cropUrl:'/ajax/cropfile',
+        modal:true,
+        imgEyecandyOpacity:0.4,
         loaderHtml:'<div class="loader bubblingG"><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div> ',
         onBeforeImgUpload: function(){ console.log('onBeforeImgUpload') },
         onAfterImgUpload: function(){ console.log('onAfterImgUpload') },
@@ -224,5 +242,54 @@ $(document).ready(function () {
     }
 
     var cropperHeader = new Croppic('cropContainerHeader', croppicContainerModalOptions);
+
+    $('#btn-send-post').click(function(){
+        var src_img = $('#cropContainerHeader > img')[0].getAttribute('src');
+        var own_comment = $('.form-group > textarea').val();
+        if(src_img != "") {
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/addpost',
+                data: 'src_img=' + src_img + '&comment=' + own_comment,
+                success: function(data) {
+                    var post = '<div class="profile-img">'
+                        +'<a><img src="'+ src_img +'" class="profile-post"/></a>'
+                        +'<div class="like-comment">'
+                        +'<img src="img/like.png"> <span>0</span>'
+                        +'<img src="img/comment.png"> <span>0</span>'
+                        +'</div>'
+                        +'</div>';
+                    $('.myphoto').prepend(post);
+                    $('#cropContainerHeader img').remove();
+                }
+            });
+        } else {
+            alert('please upload your photo!!!');
+        }
+    });
+
+    //ava
+    $('#ImgWithComment header > button').on('click',function(){
+        var src_ava = $('.img-block img')[0].getAttribute('src');
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/changeAva',
+            data: 'src_ava=' + src_ava,
+            success: function(data) {
+                $('.ava > img')[0].setAttribute('src', src_ava);
+            }
+        });
+    });
+    //edit profile
+
+    $('#sidebar-wrapper li').on('click', function(){
+        $('#sidebar-wrapper').find('.li-active').removeClass('li-active');
+        $('.row').find('.edit-active').removeClass('edit-active');
+        $(this).addClass('li-active');
+        var block = $(this).data('nameblock');
+        var classBlock = "."+ block;
+        $(classBlock).addClass('edit-active');
+    });
+
 
 });

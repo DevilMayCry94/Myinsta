@@ -184,6 +184,7 @@ class UserTable
         $select = $sql->select();
         $select->from(array('p' => 'post'))
             ->join(['u' => 'user'],'p.idUser = u.id');
+        $select->order('id_post DESC');
         $statement = $sql->prepareStatementForSqlObject($select);
         $rows = $statement->execute();
         if($rows) {
@@ -207,6 +208,7 @@ class UserTable
         $select = $sql->select();
         $select->from('post');
         $select->where(['idUser' => $this->getBy('id', ['email' => $_SESSION['userEmail']])]);
+        $select->order('id_post DESC');
         $statement = $sql->prepareStatementForSqlObject($select);
         $rows = $statement->execute();
         if($rows) {

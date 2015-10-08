@@ -1,3 +1,79 @@
-<h1>Edit profile!</h1>
+<div id="wrapper">
 
-<div id="cropContainerHeader"></div>
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand" data-nameblock="edit-main">
+                <a href="#">
+                    My profile
+                </a>
+            </li>
+            <li data-nameblock="edit-account">
+                <a href="#">Account setting</a>
+            </li>
+            <li data-nameblock="edit-post">
+                <a href="#">Post setting</a>
+            </li>
+            <li data-nameblock="edit-new">
+                <a href="#">News setting</a>
+            </li>
+            <li data-nameblock="edit-privacy">
+                <a href="#">Privacy</a>
+            </li>
+        </ul>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class=" edit-active col-lg-12 edit-main">
+                    <h1>Hello <?php //$user->name; ?></h1>
+
+                    <p></p>
+                </div>
+                <div class="col-lg-12 edit-account">
+                    <div>
+                        <h3>Change password</h3>
+
+                        <form role="form">
+                            <div class="form-group">
+                                <label>current password</label>
+                                <input type="password" class="form-control" id="current-pass"
+                                       placeholder="current password">
+                            </div>
+                            <div class="form-group">
+                                <label>new password</label>
+                                <input type="password" class="form-control" id="new-pass" placeholder="new password">
+                            </div>
+                            <div class="form-group">
+                                <label>confirm password</label>
+                                <input type="password" class="form-control" id="confirm-pass"
+                                       placeholder="confirm password">
+                            </div>
+                            <button type="submit" class="btn btn-default">Change</button>
+                        </form>
+                    </div>
+
+                </div>
+                <div class="col-lg-12 edit-post">
+                    <h1>Hello <?php //$user->name; ?></h1>
+
+                    <p></p>
+                </div>
+                <div class="col-lg-12 edit-new">
+                    <h1>Hi <?php //$user->name; ?></h1>
+
+                    <p></p>
+                </div>
+                <div class="col-lg-12 edit-privacy">
+                    <h1>Hello <?php //$user->name; ?></h1>
+
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

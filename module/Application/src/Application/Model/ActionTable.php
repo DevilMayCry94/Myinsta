@@ -25,6 +25,11 @@ class ActionTable
         $this->tableGateWay->insert($data);
     }
 
+    public function update($data, $where)
+    {
+        $this->tableGateWay->update($data,$where);
+    }
+
     public function getAction($idPost)
     {
         return $resultSet = $this->tableGateWay->select(['idPost' => $idPost])->current();
@@ -56,8 +61,8 @@ class ActionTable
 
     public function isLike($idPost, $idUser)
     {
-        $rowset = $this->tableGateWay->select(array('idPost' => $idPost, 'idUser' => $idUser));
-        if($rowset)
+        $rowset = $this->tableGateWay->select(array('idPost' => $idPost, 'idUser' => $idUser, 'like' => 1));
+        if($rowset->current())
         {
             return true;
         } else {
@@ -75,6 +80,19 @@ class ActionTable
         }
         return $idusers;
     }
+
+    public function delete($where)
+    {
+        $this->tableGateWay->delete($where);
+        return true;
+    }
+
+    public function actionUser($where)
+    {
+        $rowset = $this->tableGateWay->select($where);
+        return ($rowset->current()) ? true : false;
+    }
+
 
 
 }

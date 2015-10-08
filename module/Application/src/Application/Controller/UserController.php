@@ -10,10 +10,13 @@ class UserController extends AbstractActionController
 {
     public function indexAction()
     {
+        if(!isset($_SESSION['user'])) {
+            $this->redirect()->toRoute('home');
+        }
         $isFollow = false;
-        $form = new UploadForm('upload-form');
         $postTable = $this->getServiceLocator()->get('PostTable');
         $userTable = $this->getServiceLocator()->get('UserTable');
+        $actionTable = $this->getServiceLocator()->get('ActionTable');
         if(!isset($_GET['id'])) {
             $id = $userTable->getBy('id', ['email' => $_SESSION['userEmail']]);
         } else {
@@ -21,32 +24,24 @@ class UserController extends AbstractActionController
             $isFollow = $this->isFollowing($id);
         }
         $posts = $postTable->show($id);
+        $i_posts = $postTable->show($id);
+
+        foreach($posts as $p)
+        {
+            $data = get_object_vars($p);
+            $data['countComment'] = $actionTable->countComment($p->id_post);
+            $data['countLike'] = $actionTable->countLike($p->id_post);
+            $data['isLike'] = $actionTable->isLike($p->id_post,$userTable->getBy('id', ['email' => $_SESSION['userEmail']]));
+            $inf_posts[] = $data;
+
+        }
+
         $user = $userTable->getUser($id);
         $inf['postCount'] = $postTable->getCountPost($id);
         $inf['followersCount'] = $this->countFollower($id);
         $inf['followingCount'] = $this->countFollowing($id);
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $post = array_merge_recursive(
-                $request->getPost()->toArray(),
-                $request->getFiles()->toArray()
-            );
+        return new ViewModel(['posts' => $inf_posts,'user' => $user, 'isFollow' => $isFollow, 'inf' => $inf]);
 
-            $form->setData($post);
-            if ($form->isValid()) {
-                $dataForm = $form->getData();
-                $data = array(
-                    'urlImg'  => $dataForm['image-file']["tmp_name"],
-                    'comment' => $this->request->getPost()->post,
-                    );
-                $this->savePost($data);
-
-                return $this->redirect()->toRoute(null, ['controller' =>'user','action' => 'index']);
-            }
-        }
-        //print_r($user);die;
-
-        return new ViewModel(['form' => $form, 'posts' => $posts,'user' => $user, 'isFollow' => $isFollow, 'inf' => $inf]);
     }
 
     public function newAction()
@@ -61,9 +56,9 @@ class UserController extends AbstractActionController
                 foreach ($news as $n) {
                     $n['countLike'] = $action->countLike($n['id_post']);
                     $n['countComment'] = $action->countComment($n['id_post']);
+                    $n['isLike'] = $action->isLike($n['id_post'],$userTable->getBy('id',['email'=>$_SESSION['userEmail']]));
                     $data[] = $n;
                 }
-
                 $viewModel = new ViewModel(['news' => $data]);
                 return $viewModel;
             } else {
