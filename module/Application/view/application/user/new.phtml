@@ -12,6 +12,7 @@
         $news = $this->news;
         if ($news) {
             foreach ($news as $n) {
+                $video = false;
                 ?>
                 <div class="result ">
                     <article>
@@ -20,7 +21,24 @@
                             <a href="/user?id=<?= $n['idUser'] ?>"><strong><?= $n['name']; ?></strong></a>
                         </header>
                         <div class="new-post" data-post="<?= $n['id_post'];?>">
+                            <?php
+                            $isVideo = explode('.' , $n['urlImg'])[1];
+                            $typeVideo = ['mp4', 'avi', 'flv', 'webm', 'ogg', '3gp'];
+                            foreach($typeVideo as $type)
+                            {
+                                if($isVideo == $type)
+                                {
+                                    $video = true;
+                                }
+                            }
+                            if($video) {
+                                ?>
+                                <video autoplay height="400px" width="500px">
+                                    <source src="<?= $n['urlImg'];?>" type="video/<?= $isVideo ?>">
+                                </video>
+                            <?php } else { ?>
                             <img src="<?= $n['urlImg']; ?>">
+                            <?php } ?>
                             <p>like <span><?= $n['countLike'] . " "; ?></span>Comment <span><?= $n['countComment']; ?></span></p>
                         </div>
                         <form class="form-inline" role="form">

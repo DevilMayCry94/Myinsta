@@ -185,6 +185,7 @@ class UserTable
         $select->from(array('p' => 'post'))
             ->join(['u' => 'user'],'p.idUser = u.id');
         $select->order('id_post DESC');
+        $select->limit(5);
         $statement = $sql->prepareStatementForSqlObject($select);
         $rows = $statement->execute();
         if($rows) {
@@ -209,6 +210,7 @@ class UserTable
         $select->from('post');
         $select->where(['idUser' => $this->getBy('id', ['email' => $_SESSION['userEmail']])]);
         $select->order('id_post DESC');
+        $select->limit(5);
         $statement = $sql->prepareStatementForSqlObject($select);
         $rows = $statement->execute();
         if($rows) {
@@ -235,7 +237,7 @@ class UserTable
             ->join(array('f' => 'follow'), 'u.id = f.idFollower');
         $select->where(['f.idUser' => $this->getBy('id', ['email' => $_SESSION['userEmail']])]);
         $select->order('p.id_post DESC');
-        $select->limit(12);
+        $select->limit(5);
         $statement = $sql->prepareStatementForSqlObject($select);
         $rows = $statement->execute();
         if($rows) {
@@ -264,7 +266,7 @@ class UserTable
         $result = $sql->prepareStatementForSqlObject($select)->execute();
         foreach ($result as $r) {
             print_r($r);
-        }die;
+        }//die;
         if($result) {
             foreach ($result as $r) {
                 $data[] = $r;

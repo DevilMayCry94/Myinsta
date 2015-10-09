@@ -29,8 +29,8 @@ jsVideoRecorder.maxRecordTime               = 30;
 
 jsVideoRecorder.videoExtension              = 'webm';              //Only "webm" format is supported
 jsVideoRecorder.hideWebcamWhileRecording    = true;                //Hide webcam while recording, strongly improves performance
-jsVideoRecorder.mediaPath                   = '/medias/Temp/';
-jsVideoRecorder.phpFile                     = '/form/videoProcess.php'; //File is included inside the repository
+jsVideoRecorder.mediaPath                   = '/temp/';
+jsVideoRecorder.phpFile                     = '/user/videoProcess'; //File is included inside the repository
 
 jsVideoRecorder.init();
 
@@ -48,4 +48,9 @@ function stopRecording() {
 
     //Use this on production
     //jsVideoRecorder.stopRecording('saveAndStream');
+}
+
+function save()
+{
+    jsVideoRecorder.savedb();
 }

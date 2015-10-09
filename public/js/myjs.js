@@ -9,7 +9,7 @@ $(document).ready(function () {
             loadComment(src)
         }
 
-        commentLoad = setInterval(f, 1000);
+        commentLoad = setInterval(f, 700);
 
     });
 
@@ -98,7 +98,7 @@ $(document).ready(function () {
     }
 
     $('.close').click(function () {
-        $('.showImg').fadeOut();
+        $('.showImg').fadeOut(100);
         $('#ImgWithComment header').find('*').not('button').remove();
         $('.img-block').empty();
         $('#comments').empty();
@@ -176,7 +176,8 @@ $(document).ready(function () {
 
     $('.like-comment .profile-like').on('click',function(){
         var self = this;
-        like(self);
+        var idPost = $(this).parent().data('profilepost');
+        like(self, idPost);
     });
 
     $('.profile-img').mouseover(function () {
@@ -201,12 +202,12 @@ $(document).ready(function () {
 
     $('.like-icon img').on('click', function(){
         var self = this;
-        like(self);
+        var idPost = $(this).parent().parent().parent().parent().find('.new-post').data('post');
+        like(self, idPost);
     });
 
-    function like(self) {
+    function like(self, idPost) {
         var isLike = $(self).hasClass('like') ? 'true' : 'false';
-        var idPost = $(self).parent().parent().parent().parent().find('.new-post').data('post');
         if(isLike == 'true') {
             $(self).removeClass('like');
             $(self).attr('src','/img/unlike.png');
@@ -222,6 +223,8 @@ $(document).ready(function () {
             }
         });
     }
+
+
 
     //croppic img
 
@@ -291,5 +294,7 @@ $(document).ready(function () {
         $(classBlock).addClass('edit-active');
     });
 
+
+    ///////////////vidoss///////////
 
 });

@@ -139,6 +139,12 @@ div.container a.brand {
     float: right;
 }
 
+.profile .post .video-online {
+    position: absolute;
+    left: 180px;
+    top: 375px;
+}
+
 #InputFile {
     float: left;
 }
@@ -173,6 +179,15 @@ div.container a.brand {
 .profile-img {
     float: left;
 }
+
+.video-profile {
+    width: 300px;
+    height: 250px;
+    float: left;
+    margin: 5px;
+}
+
+
 .myphoto .like-comment {
     z-index: 99;
 }
@@ -460,3 +475,6 @@ div.container a.brand {
     width: 50px;
     height: 50px;
 }
+
+/******************video**************/
+

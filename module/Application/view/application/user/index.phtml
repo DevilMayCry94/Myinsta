@@ -49,6 +49,7 @@ $inf = $this->inf;
 
             <div class="form-element">
                 <div id="cropContainerHeader"></div>
+                <a href="/user/video" class="btn btn-default video-online">record video</a>
                 <button type="submit" class="btn btn-primary send-post" id="btn-send-post">Send</button>
             </div>
 
@@ -57,12 +58,31 @@ $inf = $this->inf;
     <div class="myphoto">
         <?php $posts = $this->posts;
         foreach ($posts as $post => $value) {
-
+            $video = false;
             ?>
-            <div class="profile-img">
-                <a><img class="profile-post" src="<?php echo $value['urlImg']; ?>" id="img_<?= $value['id_post']; ?>"/></a>
+            <div class="profile-img" >
+                <a>
+                    <?php
+                    $isVideo = explode('.' , $value['urlImg'])[1];
+                    $typeVideo = ['mp4', 'avi', 'flv', 'webm', 'ogg', '3gp'];
+                    foreach($typeVideo as $type)
+                    {
+                        if($isVideo == $type)
+                        {
+                            $video = true;
+                        }
+                    }
+                    if($video) {
+                    ?>
+                        <video autoplay class="video-profile">
+                            <source src="<?= $value['urlImg'];?>" type="video/<?= $isVideo ?>">
+                        </video>
+                    <?php } else {?>
+                    <img class="profile-post" src="<?php echo $value['urlImg']; ?>" id="img_<?= $value['id_post']; ?>"/>
+                    <?php } ?>
+                </a>
 
-                <div class="like-comment">
+                <div class="like-comment" data-profilePost="<?= $value['id_post']; ?>">
                     <img class="profile-like" src="<?= ($value['isLike']) ? '/img/like.png' : '/img/unlike.png'?>">
                     <span><?= $value['countLike']; ?></span>
                     <img src="/img/comment.png">

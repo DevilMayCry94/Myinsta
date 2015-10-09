@@ -4,6 +4,7 @@ namespace Application\Controller;
 use Application\Model\ActionUser;
 use Application\Model\Post;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Helper\ViewModel;
 use Zend\View\Model\JsonModel;
 
 class AjaxController extends AbstractActionController
@@ -386,6 +387,10 @@ class AjaxController extends AbstractActionController
 
         return new JsonModel(['status' => 'success']);
     }
+
+
+
+
 
 
 }
